@@ -1,0 +1,21 @@
+<table class="calendar-table" role="grid">
+    <thead aria-hidden="true" class="calendar-table-header">
+        <tr>
+            <th class="calendar-table-header-divider" colspan="4"></th>
+        </tr>
+    </thead>
+
+    <tbody calendar-body
+            [rows]="_years"
+            [todayValue]="_todayYear"
+            [startValue]="selectedYear!"
+            [endValue]="selectedYear!"
+            [numCols]="4"
+            [cellAspectRatio]="4 / 7"
+            [activeCell]="getActiveCell()"
+            (selectedValueChange)="onYearSelected($event)"
+            (activeDateChange)="updateActiveDate($event)"
+            (keyup)="handleCalendarBodyKeyup($event)"
+            (keydown)="handleCalendarBodyKeydown($event)">
+    </tbody>
+</table>

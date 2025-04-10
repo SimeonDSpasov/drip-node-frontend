@@ -1,0 +1,13 @@
+<div [ngClass]="{ container: true, open: isOpen, 'fit-content': !maxHeight }">
+    <div class="header" role="button" tabindex="0" (click)="isOpen = !isOpen">
+        <span class="title">
+            <ng-content select="[title]"></ng-content>
+        </span>
+
+        <span class="chevron"></span>
+    </div>
+
+    <div class="content" [@openCloseAnimation]="{ value: isOpen, params: { height: maxHeight ? maxHeight + 'px' : '*' }}">
+        <ng-content select="[content]"></ng-content>
+    </div>
+</div>

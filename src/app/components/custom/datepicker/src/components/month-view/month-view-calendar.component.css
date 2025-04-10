@@ -1,0 +1,14 @@
+table {
+    width: 100%;
+    border-spacing: 0px 4px;
+    border-collapse: separate;
+    padding: 6px;
+}
+
+th {
+    color: var(--ipi-calendar-month-view-table-header-color, #C6C6C6);
+}
+
+.calendar-table-header-divider {
+   border-bottom: 1px solid var(--ipi-datepicker-calendar-month-view-table-header-border-bottom-color, #C6C6C6);
+}

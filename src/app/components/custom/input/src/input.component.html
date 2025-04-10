@@ -1,0 +1,58 @@
+@if (options) {
+    @if (options.label !== '') {
+        <div class="header">
+            <div class="label-wrapper">
+                <label>{{ options.label }}</label>
+
+                @if (options.tooltip) {
+                    <svg class="tooltip-icon" [ipiTooltip]="options.tooltip" [tooltipPosition]="tooltipPosition.Above" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.5 7.5H8V11h.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8.25 5.25a.25.25 0 1 1-.5 0 .25.25 0 0 1 .5 0z" fill="#fff"/>
+                        </g>
+                    </svg>
+                }
+            </div>
+
+            @if (options.helperText) {
+                <div class="header-helper" (click)="onHelperText()" [routerLink]="options.helperRoute">{{ options.helperText }}</div>
+            }
+        </div>
+    }
+
+    @if (!options.formGroup) {
+        <div class="input-field" [ngClass]="{ 'disabled': options.disabled }">
+            <ng-container [ngTemplateOutlet]="prefix" [ngTemplateOutletContext]="{ prefixImg: options.prefixImg }"></ng-container>
+
+            <input [disabled]="options.disabled" class="input" autocomplete="off" [type]="options.type ? options.type : 'text'" [placeholder]="options.placeholder" (input)="onInput($event)"/>
+
+            <ng-container [ngTemplateOutlet]="suffix" [ngTemplateOutletContext]="{ suffixImg: options.suffixImg }"></ng-container>
+        </div>
+    } @else {
+        <div class="input-field" [formGroup]="options.formGroup" [ngClass]="{ 'error': controlInvalid, 'disabled': options.disabled }">
+            <ng-container [ngTemplateOutlet]="prefix" [ngTemplateOutletContext]="{ prefixImg: options.prefixImg }"></ng-container>
+
+            @if (options.formControlName) {
+                <input class="input" autocomplete="off" [type]="options.type ? options.type : 'text'" [placeholder]="options.placeholder" [formControlName]="options.formControlName"/>
+            }
+
+            <ng-container [ngTemplateOutlet]="suffix" [ngTemplateOutletContext]="{ suffixImg: options.suffixImg }"></ng-container>
+        </div>
+
+        <div class="footer" [ngClass]="{ 'error': controlInvalid }">
+            {{ label }}
+        </div>
+    }
+}
+
+<ng-template #prefix let-prefixImg="prefixImg">
+    @if (prefixImg) {
+        <ipi-img class="icon left" [src]="'assets/img/' + prefixImg" [ariaLabel]="'Input prefix icon'"></ipi-img>
+    }
+</ng-template>
+
+<ng-template #suffix let-suffixImg="suffixImg">
+    @if (suffixImg) {
+        <ipi-img class="icon right" [src]="'assets/img/' + suffixImg" (click)="onSuffixImage()" [ariaLabel]="'Input suffix icon'"></ipi-img>
+    }
+</ng-template>

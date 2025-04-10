@@ -32,4 +32,62 @@ export class NavigationComponent {
 
   }
 
+  private routeSubscription!: Subscription;
+  public activeOptionIndex: number | null = null;
+
+  public guestNavigationOptions: NavigationOption[] = [
+    {
+      label: 'Продукти',
+      path: '',
+      // scrollTo: 'products'
+    },
+    { 
+      label: 'За нас',
+      path: 'about-us',
+      // scrollTo: 'technologies',
+    },
+    { 
+      label: 'Въпроси',
+      path: '',
+      // scrollTo: 'faq',
+    },
+  ];
+
+  private subscribeToRouterEvents(): void {
+    this.routeSubscription = this.router.events.subscribe(event => {
+      if (!(event instanceof NavigationEnd)) {
+        return;
+      }
+
+      const path = event.url.slice(1);
+
+      if (!history.state) {
+        this.activeOptionIndex = null;
+
+        return;
+      }
+
+      if (history.state.ind !== undefined) {
+        this.activeOptionIndex = history.state.ind;
+      }
+      else {
+        const index = this.guestNavigationOptions.findIndex(option => option.path === path && !option.scrollTo);
+
+        this.activeOptionIndex = index !== -1 ? index : null;
+      }
+
+      if (history.state.scrollTo) {
+        setTimeout(() => {
+          const element = document.querySelector('#' + history.state.scrollTo) as HTMLElement;
+
+          if (!element) {
+            return;
+          }
+
+          window.scrollTo({ top: element.getBoundingClientRect().top - 120, behavior: 'smooth' });
+        }, 100);
+      }
+    });
+  }
+
 }

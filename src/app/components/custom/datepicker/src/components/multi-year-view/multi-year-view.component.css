@@ -1,0 +1,13 @@
+:host {
+    display: block;
+}
+
+table {
+    width: 100%;
+    padding: 6px;
+    border-collapse: separate;
+}
+
+.calendar-table-header-divider {
+    border-bottom: 1px solid var(--ipi-calendar-multi-year-view-table-header-border-bottom-color, #C6C6C6);
+}

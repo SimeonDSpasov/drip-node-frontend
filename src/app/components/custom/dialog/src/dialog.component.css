@@ -1,0 +1,80 @@
+.backdrop {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: var(--ipi-dialog-backdrop-background, #0B1222);
+    opacity: 0.5;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    pointer-events: all;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialog {
+    width: calc(100% - 48px);
+    max-width: var(--ipi-dialog-max-width, 432px);
+    max-height: calc(100% - 48px);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background-color: var(--ipi-dialog-background, #FFFFFF);
+    padding: 40px;
+}
+
+.close-icon {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.close-icon svg path {
+    stroke: var(--ipi-dialog-close-icon-color, #000000);
+}
+
+.close-icon:hover svg path {
+    stroke: var(--ipi-dialog-close-icon-hover-color, #000000);
+}
+
+.title {
+    color: var(--ipi-dialog-title-color, #0B1222);
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.description {
+    color: var(--ipi-dialog-description-color, #5D6068);
+    text-align: center;
+}
+
+.content {
+    width: 100%;
+    overflow-y: auto;
+}
+
+.description:not(:empty),
+.content:not(:empty) {
+    margin-bottom: 24px;
+}
+
+:host-context(.mobile) .dialog > .actions {
+    width: 100%;
+}

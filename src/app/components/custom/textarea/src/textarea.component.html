@@ -1,0 +1,35 @@
+@if (options) {
+    @if (options.label !== '') {
+        <div class="header">
+            <label> {{ options.label }}</label>
+        </div>
+    }
+
+    @if (!options.formGroup) {
+        <div class="textArea">
+            <div class="container">
+                @if (options.icon) {
+                    <ipi-img class="icon" [src]="'assets/img/' + options.icon" [ariaLabel]="'textarea icon'"></ipi-img>
+                }
+
+                <textarea [placeholder]="options.placeholder ? options.placeholder : ''" autocomplete="off" (input)="onInput($event)"></textarea>
+            </div>
+        </div>
+    }
+
+    @if (options.formGroup && options.formControlName) {
+        <div class="textArea" [formGroup]="options.formGroup" [ngClass]="{ 'invalid': controlInvalid, 'disabled': control.disabled }">
+            <div class="container">
+                @if (options.icon) {
+                    <ipi-img class="icon" [src]="'assets/img/' + options.icon" [ariaLabel]="'textarea icon'"></ipi-img>
+                }
+
+                <textarea autocomplete="off" [placeholder]="options.placeholder ? options.placeholder : ''" [formControlName]="options.formControlName"></textarea>
+            </div>
+        </div>
+
+        <div class="footer">
+            {{ controlError }}
+        </div>
+    }
+}

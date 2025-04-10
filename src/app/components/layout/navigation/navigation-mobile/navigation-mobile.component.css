@@ -5,3 +5,68 @@
     justify-content: space-between;
     margin-bottom: 80px;
 }
+
+.hidden {
+    display: none;
+}
+
+.buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    padding: 6px;
+}
+
+.expandable {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    background-color: white;
+    box-sizing: border-box;
+    padding: 24px 16px;
+    user-select: none;
+    z-index: 999;
+}
+
+.expandable > div {
+    width: 100%;
+    height: 100%;
+    max-width: 344px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.expandable .top {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    row-gap: 60px;
+}
+
+.expandable .middle {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 24px;
+}
+
+.expandable .option {
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.expandable .option.active {
+    color: var(--blue-primary);
+}

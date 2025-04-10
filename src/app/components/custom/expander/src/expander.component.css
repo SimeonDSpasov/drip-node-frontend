@@ -1,0 +1,72 @@
+:host {
+    display: block;
+    touch-action: manipulation;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--ipi-expander-background-color, #FFFFFF);
+    border-radius: 8px;
+    border: var(--ipi-expander-border, 0px);
+    box-shadow: var(--ipi-expander-box-shadow, 0px 4px 8px 0px rgba(214, 214, 214, 0.35));
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 30px;
+    cursor: pointer;
+    padding: 20px 30px;
+}
+
+.header:focus {
+    outline: var(--ipi-expander-outline-color, none);
+}
+
+.header .title {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ipi-expander-title-color,  #0B1222);
+}
+
+.header .chevron {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    position: relative;
+    bottom: 3px;
+    transform-origin: center;
+    transform: rotate(-135deg);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.1, 1);
+    border-top: 2px solid var(--ipi-expander-chevron-color, #5D6068);
+    border-left: 2px solid var(--ipi-expander-chevron-color, #5D6068);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 1px;
+    border-bottom-left-radius: 1px;
+}
+
+.container.open .header .chevron {
+    bottom: -3px;
+    transform: rotate(45deg);
+    border-top: 2px solid var(--ipi-expander-chevron-open-color, #F96138);
+    border-left: 2px solid var(--ipi-expander-chevron-open-color, #F96138);
+}
+
+.content {
+    overflow: hidden;
+    font-size: 15px;
+    color: var(--ipi-expander-content-color, #5D6068);
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.container.open .content {
+    overflow: auto;
+}
+
+.container.fit-content .content::-webkit-scrollbar {
+    display: none;
+}

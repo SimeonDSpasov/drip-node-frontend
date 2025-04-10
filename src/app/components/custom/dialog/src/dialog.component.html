@@ -1,0 +1,37 @@
+<div class="backdrop"></div>
+
+<div class="container">
+    <div class="dialog">
+        @if (closeIcon) {
+            <div #closeIcon tabindex="0" class="close-icon" (keydown)="handleKeydown($event)" (click)="onCloseIconClick()">
+                <svg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 5 5 15M15 15 5 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        }
+
+        @if (title) {
+            <span class="title">
+                <ng-container [ngTemplateOutlet]="title"></ng-container>
+            </span>
+        }
+    
+        @if (description) {
+            <span class="description">
+                <ng-container [ngTemplateOutlet]="description"></ng-container>
+            </span>
+        }
+    
+        @if (content) {
+            <div class="content">
+                <ng-container [ngTemplateOutlet]="content"></ng-container>
+            </div>
+        }
+    
+        @if (actions) {
+            <div class="actions">
+                <ng-container [ngTemplateOutlet]="actions"></ng-container>
+            </div>
+        }
+    </div>
+</div>

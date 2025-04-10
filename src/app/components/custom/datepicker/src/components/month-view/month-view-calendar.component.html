@@ -1,0 +1,37 @@
+<table class="calendar-table" role="grid">
+    <thead class="calendar-table-header">
+        <tr>
+            @for (day of weekdays; track day.id) {
+                <th scope="col">
+                    <span class="cdk-visually-hidden">{{ day.long }}</span>
+
+                    <span aria-hidden="true">{{ day.narrow }}</span>
+                </th>
+            }
+        </tr>
+
+        <tr aria-hidden="true">
+            <th class="calendar-table-header-divider" colspan="7"></th>
+        </tr>
+    </thead>
+
+    <tbody calendar-body
+           [label]="monthLabel"
+           [rows]="weeks"
+           [todayValue]="todayDate!"
+           [startValue]="rangeStart!"
+           [endValue]="rangeEnd!"
+           [previewStart]="previewStart"
+           [previewEnd]="previewEnd"
+           [isRange]="isRange"
+           [activeCell]="getActiveCell()"
+           [labelMinRequiredCells]="2"
+           (dragStarted)="dragStarted.emit($event)"
+           (dragEnded)="onDragEnded($event)"
+           (activeDateChange)="updateActiveDate($event)"
+           (selectedValueChange)="dateSelected($event)"
+           (previewChange)="previewChanged($event)"
+           (keyup)="handleCalendarBodyKeyup($event)"
+           (keydown)="handleCalendarBodyKeydown($event)">
+    </tbody>
+</table>

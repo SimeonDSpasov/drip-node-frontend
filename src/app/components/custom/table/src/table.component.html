@@ -1,0 +1,225 @@
+<div class="container">
+    <table>
+        <thead>
+          <tr>
+            @for (column of columns; track $index) {
+                <th [ngStyle]="{ width: column.width ? column.width : '' }">
+                        <div class="cell">
+                            <span>{{ column.label }}</span>
+    
+                            @if (column.type !== TableColumnType.Actions && sortable) {
+                                <div class="arranger" (click)="sortColumn(column)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 12 12" fill="none">
+                                        <path d="M3.11445 5.50005H8.88795C9.31895 5.50005 9.54795 4.99005 9.26145 4.66755L6.37495 1.42005C6.32813 1.3672 6.27063 1.32489 6.20624 1.29591C6.14186 1.26694 6.07205 1.25195 6.00145 1.25195C5.93084 1.25195 5.86104 1.26694 5.79666 1.29591C5.73227 1.32489 5.67477 1.3672 5.62795 1.42005L2.74045 4.66755C2.45395 4.99005 2.68295 5.50005 3.11445 5.50005ZM5.62745 10.5795C5.67427 10.6324 5.73177 10.6747 5.79616 10.7037C5.86054 10.7327 5.93034 10.7476 6.00095 10.7476C6.07155 10.7476 6.14136 10.7327 6.20574 10.7037C6.27013 10.6747 6.32763 10.6324 6.37445 10.5795L9.26095 7.33205C9.54795 7.01005 9.31895 6.50005 8.88745 6.50005H3.11445C2.68345 6.50005 2.45445 7.01005 2.74095 7.33255L5.62745 10.5795Z" fill="#C6C6C6"/>
+                                    </svg>
+                                </div>
+                            }
+                        </div>
+                </th>
+            }
+          </tr>
+        </thead>
+
+        <tbody [ngClass]="{ 'is-loading': this.isLoading }">
+            @for (row of getPageData(); track $index) { 
+                <tr>
+                    @for (column of columns; track $index) {
+                        <td tabindex="-1">
+                            @switch (column.type) {
+                                @case (undefined) {
+                                    <ng-container *ngTemplateOutlet="textCell; context: { row, column, $index }"></ng-container>
+                                }
+
+                                @case (TableColumnType.Number) {
+                                    <ng-container *ngTemplateOutlet="numberCell; context: { row, column }"></ng-container>
+                                }
+
+                                @case (TableColumnType.Currency) {
+                                    <ng-container *ngTemplateOutlet="currencyCell; context: { row, column }"></ng-container>
+                                }
+
+                                @case (TableColumnType.NumberMath) {
+                                    <ng-container *ngTemplateOutlet="numberMathCell; context: { row, column }"></ng-container>
+                                }
+
+                                @case (TableColumnType.Date) {
+                                    <ng-container *ngTemplateOutlet="dateCell; context: { row, column }"></ng-container>
+                                }
+
+                                @case (TableColumnType.Chip) {
+                                    <ng-container *ngTemplateOutlet="chipCell; context: { row, column }"></ng-container>
+                                }
+
+                                @case (TableColumnType.Checkbox) {
+                                    <ng-container *ngTemplateOutlet="checkboxCell; context: { row, column }"></ng-container>
+                                }
+
+                                @case (TableColumnType.Actions) {
+                                    <ng-container *ngTemplateOutlet="actionCell; context: { row, column }"></ng-container>
+                                }
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (filter && filteredData && filteredData.length === 0) {
+        <div class="row no-data">
+            <span>No data matching the filter:</span>
+
+            <span>"{{ filter }}"</span>
+        </div>
+    }
+
+    @if (!filter && data && data.length === 0) {
+        <div class="row no-data">No data available.</div>
+    }
+
+    @if (pageable && getPageData().length !== 0) {
+        <div class="paging">
+            <div class="visible-range">{{ visibleRange }}</div>
+
+            <ng-container *ngTemplateOutlet="pagePicker; context: { totalPages: totalPages }"></ng-container>
+
+            <div class="page-size-option-picker">
+                <span>Items per page:</span>
+
+                <ipi-select class="table" [options]="pageSizeSelectOptions"></ipi-select>
+            </div>
+        </div>
+    }
+</div>
+
+<ng-template #textCell let-row="row" let-column="column" let-index="$index">
+    <div class="cell"
+        [ngClass]="getClass(row, column)"
+        [attr.contenteditable]="column.editable"
+        (keyup)="cellEdit($event, column.value, index)">
+
+            {{ column.prefix ? column.prefix : '' }}{{ getDescendantProp(row, column) }}{{ column.suffix ? column.suffix : '' }}
+    </div>
+</ng-template>
+
+<ng-template #dateCell let-row="row" let-column="column">
+    <div class="cell"
+        [ngClass]="getClass(row, column)">
+        {{ formatDate(getDescendantProp(row, column), column.dateFormat) }}
+    </div>
+</ng-template>
+
+<ng-template #currencyCell let-row="row" let-column="column">
+    <div class="cell"
+        [ngClass]="getClass(row, column)"
+        [ngStyle]="{ width: column.width ? column.width : '' }">
+
+        @if (getDescendantProp(row, column) !== undefined) {
+            {{ column.prefix ? column.prefix : '' }}{{ (getDescendantProp(row, column) / 100) | number }}
+        }
+    </div>
+</ng-template>
+
+<ng-template #numberCell let-row="row" let-column="column" let-index="i">
+    <div class="cell"
+        [ngClass]="getClass(row, column)"
+        [attr.contenteditable]="column.editable"
+        (keyup)="cellEdit($event, column.value, index)">
+
+            {{ column.prefix ? column.prefix : '' }}{{ getDescendantProp(row, column) | number}}{{ column.suffix ? column.suffix : '' }}
+    </div>
+</ng-template>
+
+<ng-template #numberMathCell let-row="row" let-column="column" let-index="i">
+    <div class="cell"
+        [ngClass]="getClass(row, column)"
+        [attr.contenteditable]="column.editable"
+        (keyup)="cellEdit($event, column.value, index)">
+
+            {{ column.prefix ? column.prefix : '' }}{{ getDescendantProp(row, column) | number}}{{ column.suffix ? column.suffix : '' }}
+    </div>
+</ng-template>
+
+<ng-template #actionCell let-row="row" let-column="column">
+    <div class="cell actions">
+
+        @for (action of column.singleActions; track $index) {
+            @if (handleActionShow(action, row, column)) {
+                <div IpiTooltip (click)="action.execute && action.execute(row)" [ipiTooltip]="action.label" [tooltipPosition]="tooltipPosition.Above" class="action-icon-wrapper" [ngClass]="{ 'disabled': action.disabled }">
+                    <ipi-img [src]=" 'assets/img/' + action.icon" [ngClass]="action.class" [ariaLabel]="'Action icon for ' + action.label"></ipi-img>
+                </div>
+            }
+        }
+
+        @if (column.multipleActions) {
+            <div class="action-icon-wrapper" #moreActionsList [ngClass]="{ 'opened': row.isDropdown }" (click)="toggleActionDropdown(row, $event)">
+                <svg class="multiple-action-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 17 16" fill="none">
+                    <path d="M10.3047 8C10.3047 8.34612 10.2021 8.68446 10.0098 8.97225C9.81747 9.26004 9.54416 9.48434 9.22438 9.61679C8.90461 9.74924 8.55275 9.7839 8.21328 9.71638C7.87381 9.64885 7.56199 9.48218 7.31725 9.23744C7.07251 8.9927 6.90584 8.68088 6.83831 8.34141C6.77079 8.00194 6.80545 7.65008 6.9379 7.33031C7.07035 7.01053 7.29465 6.73722 7.58244 6.54493C7.87023 6.35264 8.20857 6.25 8.55469 6.25C9.01868 6.25046 9.46353 6.43498 9.79162 6.76307C10.1197 7.09116 10.3042 7.53601 10.3047 8ZM8.55469 4.75C8.90081 4.75 9.23915 4.64737 9.52694 4.45507C9.81472 4.26278 10.039 3.98947 10.1715 3.6697C10.3039 3.34993 10.3386 2.99806 10.2711 2.65859C10.2035 2.31913 10.0369 2.00731 9.79213 1.76256C9.54738 1.51782 9.23556 1.35115 8.8961 1.28363C8.55663 1.2161 8.20476 1.25076 7.88499 1.38321C7.56522 1.51566 7.29191 1.73997 7.09962 2.02775C6.90732 2.31554 6.80469 2.65388 6.80469 3C6.80515 3.46399 6.98967 3.90884 7.31776 4.23693C7.64585 4.56502 8.0907 4.74954 8.55469 4.75ZM8.55469 11.25C8.20857 11.25 7.87023 11.3526 7.58244 11.5449C7.29465 11.7372 7.07035 12.0105 6.9379 12.3303C6.80545 12.6501 6.77079 13.0019 6.83831 13.3414C6.90584 13.6809 7.07251 13.9927 7.31725 14.2374C7.56199 14.4822 7.87381 14.6489 8.21328 14.7164C8.55275 14.7839 8.90461 14.7492 9.22438 14.6168C9.54416 14.4843 9.81747 14.26 10.0098 13.9722C10.2021 13.6845 10.3047 13.3461 10.3047 13C10.3042 12.536 10.1197 12.0912 9.79162 11.7631C9.46353 11.435 9.01868 11.2505 8.55469 11.25Z" fill="#5D6068"/>
+                </svg>
+            </div>
+        }
+
+    </div>
+
+    @if (row.isDropdown) {
+        <ng-container class="dropdown-element" *ngTemplateOutlet="multipleActionsDropdown; context: { row, column }"></ng-container>
+    }
+</ng-template>
+
+<ng-template #chipCell let-row="row" let-column="column">
+    <div class="cell chip">
+        @if (getChipLabel(row, column)) {
+            <ipi-chip [ngClass]="getClass(row, column)"> {{ getChipLabel(row, column) }}</ipi-chip>
+        }
+    </div>
+</ng-template>
+
+<ng-template #checkboxCell let-row="row" let-column="column">
+    <div class="cell checkbox">
+        <ipi-checkbox [checked]="getCheckboxState(row, column)" [disabled]="true"></ipi-checkbox>
+    </div>
+</ng-template>
+
+<ng-template #multipleActionsDropdown let-row="row" let-column="column">
+    <div #multipleActionsDropdownElement #dropdownElement class="more-actions-dropdown">
+        @for (action of column.multipleActions; track $index) {
+
+            @if (handleActionShow(action, row, column)) {
+                <div class="dropdown-row" (click)="action.execute && action.execute(row)">
+                    <ipi-img [src]="'assets/img/' + action.icon" [ngClass]="action.class" [ariaLabel]="'Action icon for ' + action.label"></ipi-img>
+
+                    <span>{{ action.label }}</span>
+                </div>
+            }
+
+        }
+    </div>
+</ng-template>
+
+<ng-template #pagePicker let-totalPages="totalPages">
+    <div class="page-picker">
+        <!-- If page one should be visible -->
+        @if (currentPage + 1 >= 3) {
+            <span (click)="goToPage(0)">1</span>
+            <span class="style-excluded">...</span>
+        }
+
+        <!-- Middle part of the page-picker -->
+        <ng-container *ngTemplateOutlet="page; context: { page: currentPage - 1 } "></ng-container>
+        <ng-container *ngTemplateOutlet="page; context: { page: currentPage, class: 'highlighted' } "></ng-container>
+        <ng-container *ngTemplateOutlet="page; context: { page: currentPage + 1 } "></ng-container>
+
+        <!-- If last page should be visible -->
+        @if (currentPage + 1 <= totalPages - 2) {
+            <span class="style-excluded">...</span>
+            <span (click)="goToPage(totalPages - 1)">{{ totalPages }}</span>
+        }
+
+    </div>
+</ng-template>
+
+<ng-template #page let-page="page" let-class="class">
+    @if (page >= 0 && page < totalPages) {
+        <span [ngClass]="class" (click)="goToPage(page)">{{ page + 1 }}</span>
+    }
+</ng-template>

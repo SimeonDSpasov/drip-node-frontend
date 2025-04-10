@@ -3,22 +3,37 @@ import { RouterLink } from '@angular/router';
 
 import { NavigationOption } from './../navigation.component';
 
+import { IpiImageComponent } from './../../../custom/image';
+import { ScrollBlockService } from './../../../custom/services';
+
+import { NavigationMobileAnimation } from './../../../../animations/navigation-mobile.animation';
+
 @Component({
   selector: 'app-navigation-mobile',
   templateUrl: './navigation-mobile.component.html',
   styleUrls: ['./navigation-mobile.component.css'],
-  animations: [],
+  animations: [NavigationMobileAnimation],
   imports: [
+    RouterLink,
+    IpiImageComponent,
   ],
 })
 
 export class NavigationMobileComponent {
 
-  constructor() { }
+  constructor(
+    private scrollBlockService: ScrollBlockService,
+  ) { }
 
   @Input() activeOptionIndex: number | null = null;
   @Input() navigationOptions: NavigationOption[] = [];
 
+  public isExpanded: boolean = false;
 
+  public triggerAnimation(): void {
+    this.isExpanded = !this.isExpanded;
+
+    this.isExpanded ? this.scrollBlockService.activate() : this.scrollBlockService.deactivate();
+  }
 
 }

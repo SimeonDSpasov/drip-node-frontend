@@ -1,0 +1,90 @@
+:host {
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--ipi-datepicker-header-text-color, #FF7955);
+    padding: 8px 8px 0 8px;
+}
+
+.active-date-view {
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+.active-date-view:focus {
+    outline: none;
+    color: var(--ipi-calendar-header-active-date-view-focus-color, #FFFFFF);
+    background-color: var(--ipi-calendar-header-active-date-view-focus-background-color, #FF7955);
+}
+
+.active-date-view:hover {
+    border-radius: 4px;
+    color: var(--ipi-calendar-header-active-date-view-hover-color, #FFFFFF);
+    background-color: var(--ipi-calendar-header-active-date-view-hover-background-color, #FF7955);
+}
+
+.header-navigation {
+    display: flex;
+}
+
+.chevron-wrapper {
+    display: flex;
+    border-radius: 50%;
+}
+
+.chevron-wrapper:focus {
+    outline: none;
+}
+
+.chevron-wrapper:hover,
+.chevron-wrapper:focus:not(.disabled)
+ {
+    color: var(--ipi-calendar-header-chevron-hover-focus-color, #FFFFFF);
+    background-color: var(--ipi-calendar-header-chevron-hover-focus-background-color, #FF7955);
+}
+
+.chevron {
+    /* --ipi-datepicker-header-text-color is responsible for chevron color */
+    width: 24px;
+    height: 24px;
+    padding: 8px;
+    position: relative;
+    cursor: pointer;
+}
+
+.chevron::after {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    content: "";
+    margin: 15.5px;
+    border: 0 solid currentColor;
+    border-top-width: 2px;
+    border-left-width: 2px;
+}
+
+.chevron.right {
+    transform: rotate(135deg);
+}
+
+.chevron-wrapper.disabled {
+    pointer-events: none;
+    background-color: none;
+    color: var(--ipi-calendar-header-chevron-disabled-color, #5D6068);
+}
+
+.chevron.left {
+    transform: rotate(-45deg);
+}
+
+ipi-button {
+    position: absolute;
+    bottom: -50px;
+}

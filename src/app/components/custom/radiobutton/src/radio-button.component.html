@@ -1,0 +1,32 @@
+@if (options) {
+    @if (options.formGroup && options.formControlName) {
+        <div class="container" [formGroup]="options.formGroup" [ngClass]="{ 'inline': options.inline }">
+            @for (item of options.data; track item) {
+                <label class="radio-button" [ngClass]="{ 'disabled': options.formGroup.controls[options.formControlName].disabled }">
+                    <input type="radio" [value]="item.value" [formControlName]="options.formControlName"/>
+        
+                    <span>{{ item.label }}</span>
+                </label>
+            }
+        </div>
+    } @else {
+        <div class="container" [ngClass]="{ 'inline': options.inline }">
+            @for (item of options.data; track item; let i = $index) {
+                <label class="radio-button">
+                    <input type="radio" [name]="buttonGroupId" [checked]="i === options.checked" (change)="onChange(item)">
+
+                    <span>{{ item.label }}</span>
+
+                    @if (item.tooltip) {
+                        <svg class="tooltip-icon" [ipiTooltip]="item.tooltip" [tooltipPosition]="tooltipPositionAbove" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g>
+                                <path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.5 7.5H8V11h.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M8.25 5.25a.25.25 0 1 1-.5 0 .25.25 0 0 1 .5 0z" fill="#fff"/>
+                            </g>
+                        </svg>
+                    }
+                </label>
+            }
+        </div>
+    }
+}

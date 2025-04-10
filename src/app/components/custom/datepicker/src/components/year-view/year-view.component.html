@@ -1,0 +1,23 @@
+<table class="calendar-table" role="grid">
+    <thead aria-hidden="true" class="calendar-table-header">
+        <tr>
+            <th class="calendar-table-header-divider" colspan="4"></th>
+        </tr>
+    </thead>
+
+    <tbody calendar-body
+         [label]="yearLabel"
+         [rows]="months"
+         [todayValue]="todayMonth!"
+         [startValue]="selectedMonth!"
+         [endValue]="selectedMonth!"
+         [labelMinRequiredCells]="2"
+         [numCols]="4"
+         [cellAspectRatio]="4 / 7"
+         [activeCell]="datePickerService.getMonth(activeDate)"
+         (selectedValueChange)="onMonthSelected($event)"
+         (activeDateChange)="updateActiveDate($event)"
+         (keyup)="handleCalendarBodyKeyup($event)"
+         (keydown)="handleCalendarBodyKeydown($event)">
+    </tbody>
+</table>

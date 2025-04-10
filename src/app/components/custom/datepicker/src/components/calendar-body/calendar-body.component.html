@@ -1,0 +1,68 @@
+@if (firstRowOffset < labelMinRequiredCells) {
+    <tr aria-hidden="true">
+        <td class="calendar-body-label"
+            [attr.colspan]="numCols"
+            [style.paddingTop]="cellPadding"
+            [style.paddingBottom]="cellPadding">
+                {{ label }}
+        </td>
+    </tr>
+}
+
+@for (row of rows; track trackRow(row); let rowIndex = $index) {
+    <tr role="row">
+        @if (rowIndex === 0 && firstRowOffset) {
+            <td
+                class="calendar-body-label"
+                [attr.colspan]="firstRowOffset"
+                [style.paddingTop]="cellPadding"
+                [style.paddingBottom]="cellPadding">
+                    {{ firstRowOffset >= labelMinRequiredCells ? label : ''}}
+            </td>
+        }
+
+        @for (item of row; track item; let colIndex = $index) {
+            <td
+                role="gridcell"
+                class="calendar-body-cell-container"
+                [style.width]="cellWidth"
+                [style.paddingTop]="cellPadding"
+                [style.paddingBottom]="cellPadding"
+                [attr.data-row]="rowIndex"
+                [attr.data-col]="colIndex"
+            >
+                <button
+                    type="button"
+                    class="calendar-body-cell"
+                    [tabindex]="isActiveCell(rowIndex, colIndex) ? 0 : -1"
+                    [class.disabled]="!item.enabled"
+                    [class.selected]="isSelected(item.compareValue)"
+                    [class.active]="isActiveCell(rowIndex, colIndex)"
+                    [class.today]="todayValue === item.compareValue"
+                    [class.range-start]="isRangeStart(item.compareValue)"
+                    [class.range-end]="isRangeEnd(item.compareValue)"
+                    [class.in-range]="isCellInRange(item.compareValue)"
+                    [class.in-preview]="isInPreview(item.compareValue)"
+                    [class.preview-start]="isPreviewStart(item.compareValue)"
+                    [class.preview-end]="isPreviewEnd(item.compareValue)"
+                    [attr.aria-label]="item.ariaLabel"
+                    [attr.aria-disabled]="!item.enabled || null"
+                    [attr.aria-pressed]="isSelected(item.compareValue)"
+                    [attr.aria-current]="todayValue === item.compareValue ? 'date' : null"
+                    [attr.aria-describedby]="getDescribedby(item.compareValue)"
+                    (click)="cellClicked(item, $event)"
+                    (focus)="emitActiveDateChange(item, $event)">
+                        <span class="calendar-body-cell-content focus-indicator">
+                                {{ item.displayValue }}
+                        </span>
+
+                        <span class="calendar-body-cell-preview" aria-hidden="true"></span>
+                </button>
+            </td>
+        }
+    </tr>
+}
+
+<span [id]="startDateLabelId" class="calendar-body-hidden-label">{{ startDateAccessibleName }}</span>
+
+<span [id]="endDateLabelId" class="calendar-body-hidden-label">{{ endDateAccessibleName }}</span>

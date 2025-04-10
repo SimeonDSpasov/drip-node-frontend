@@ -1,0 +1,155 @@
+tr {
+  height: 40px;
+}
+
+.calendar-body-label {
+  height: 0;
+  line-height: 0;
+  text-align: start;
+}
+
+.calendar-body-cell {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  outline: none;
+  text-align: center;
+  color: var(--ipi-calendar-body-cell-color, #0B1222);
+  background: var(--ipi-datepicker-calendar-body-cell-background-color, none);
+  border: var(--ipi-calendar-body-cell-border, none);
+  margin: 0;
+}
+
+.calendar-body-hidden-label {
+  display: none;
+}
+
+.calendar-body-cell-container {
+  position: relative;
+  height: 0;
+  line-height: 0;
+}
+
+.calendar-body-cell::before,
+.calendar-body-cell::after,
+.calendar-body-cell-preview {
+  height: 100%;
+  width: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+  box-sizing: border-box;
+  z-index: 0;
+}
+
+.calendar-body-cell {
+  border-radius: 4px;
+  transition: border-radius 0.1s ease-out;
+}
+
+.calendar-body-cell:hover {
+  color: var(--ipi-calendar-body-cell-hover-color, white);
+  background-color: var(--ipi-calendar-body-cell-hover-background-color, #FFD2C6);
+}
+
+.today {
+  border: var(--ipi-calendar-body-today-cell-border, 1px solid #FFD2C6);
+}
+
+/* Preview styles */
+.in-preview, .calendar-body-cell.in-preview, .calendar-body-cell.in-range.in-preview {
+  background-color: var(--ipi-calendar-body-cell-in-preview-background-color, #FFD2C6);
+  border-left: 0px;
+  border-right: 0px;
+  border-radius: 0;
+  border-top: var(--ipi-calendar-body-cell-in-preview-border, 1px dashed #F96138);
+  border-bottom: var(--ipi-calendar-body-cell-in-preview-border, 1px dashed #F96138);
+}
+
+.calendar-body-cell.in-preview.preview-end {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-right: var(--ipi-calendar-body-cell-preview-end-border, 1px dashed #F96138);
+  background-color: var(--ipi-calendar-body-cell-preview-end-background-color, #FFD2C6);
+  color: var(--ipi-calendar-body-cell-preview-end-color, #FFFFFF);
+}
+
+.calendar-body-cell.in-preview.preview-start {
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-left: var(--ipi-calendar-body-cell-preview-start-border, 1px dashed #F96138);
+  background-color: var(--ipi-calendar-body-cell-preview-start-background-color, #FFD2C6);
+  color: var(--ipi-calendar-body-cell-preview-start-color, #FFFFFF);
+}
+
+.calendar-body-cell:hover .in-preview, .calendar-body-cell:hover .in-range {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px; 
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.active:focus {
+  background-color: var(--ipi-calendar-body-active-cell-background-color, #FFD2C6);
+}
+
+/* In Range Styles */
+.calendar-body-cell.in-range {
+  background-color: var(--ipi-calendar-body-cell-in-range-background-color, #FFF2EF);
+  border-left: 0px;
+  border-right: 0px;
+  border-radius: 0;
+  border-top: var(--ipi-calendar-body-cell-in-range-border, 1px solid #F96138);
+  border-bottom: var(--ipi-calendar-body-cell-in-range-border, 1px solid #F96138);
+}
+
+.in-range.active {
+  background-color: var(--ipi-calendar-body-cell-in-range-active-background-color, #FFD2C6);
+}
+
+.in-range.range-start {
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  color: var(--ipi-calendar-body-cell-range-start-color, #FFFFFF);
+  border-left: var(--ipi-calendar-body-cell-range-start-border, 1px solid #F96138);
+  background-color: var(--ipi-calendar-body-cell-range-start-background-color, #F96138);
+
+}
+
+.in-range.range-end {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  color: var(--ipi-calendar-body-cell-range-end-color, #FFFFFF);
+  border-right: var(--ipi-datepicker-calendar-body-cell-end-start-border, 1px solid #F96138);
+  background-color: var(--ipi-datepicker-calendar-body-cell-end-start-background-color, #F96138);
+}
+
+/* One level on top of in-range end & start so the current selected is still visible on top of preview */
+.calendar-body-cell.in-range.range-end, .calendar-body-cell.in-range.range-start {
+  background-color: var(--ipi-datepicker-calendar-body-cell-end-start-background-color, #F96138);
+}
+
+.active.in-range.range-end,
+.active.in-range.range-start
+{
+  background-color: var(--ipi-calendar-body-cell-active-in-range-start-end-background-color, #FFD2C6);
+}
+
+/* Selected Styles */
+.calendar-body-cell.selected {
+  color: var(--ipi-calendar-body-cell-selected-color, #FFFFFF);
+  background-color: var(--ipi-calendar-body-cell-selected-background-color, #F96138);
+}
+
+
+.disabled {
+  cursor: none;
+  border: none;
+  border-radius: 0px;
+  pointer-events: none;
+  background-color: var(--ipi-calendar-body-cell-disabled-background-color, #E0DFDE);
+}

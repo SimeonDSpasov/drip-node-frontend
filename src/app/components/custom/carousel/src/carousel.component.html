@@ -1,0 +1,33 @@
+<div class="carousel-container">
+    <div #carousel class="carousel" (scroll)="onScroll($event)">
+            <ng-content></ng-content>
+    </div>
+</div>
+
+<div class="carousel-navigation">
+    <div class="navigation-buttons-wrapper">
+        <div 
+            #prevButton
+            tabindex="0"
+            class="chevron-wrapper"
+            aria-label="Scroll to previous item"
+            (click)="scrollSubject.next('prev')"
+            (keydown)="onNavigationKeydown($event, 'prev')">
+                <div class="chevron prev"></div>
+        </div>
+
+        <div
+            #nextButton
+            tabindex="0"
+            class="chevron-wrapper"
+            aria-label="Scroll to next item"
+            (click)="scrollSubject.next('next')"
+            (keydown)="onNavigationKeydown($event, 'next')">
+                <div class="chevron next"></div>
+        </div>
+    </div>
+
+    <div #progressBarContainer class="scroll-bar-container">
+        <div class="scroll-indicator" [style.width.%]="scrollProgress"></div>
+    </div>
+</div>

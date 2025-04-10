@@ -1,2 +1,29 @@
 <div class="container">
+    <div class="left-nav">
+        <a [routerLink]="'/'">
+            <h2>DRIPNODE</h2>
+        </a>
+    
+        <div class="options shine-top-left">
+            @for (item of navigationOptions; track $index) {
+                <a class="option"
+                    [routerLink]="item.path"
+                    [class.active]="activeOptionIndex === $index"
+                    [state]="{ ind: $index, scrollTo: item.scrollTo ? item.scrollTo : null }">
+    
+                    {{ item.label }}
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="right-nav">
+        <div class="cart hover-darken">
+          <div class="cart-icon">
+            <ipi-img [src]="'assets/icons/cart.svg'" [ariaLabel]="'Cart icon'"></ipi-img>
+          </div>
+        </div>
+      </div>
+      
+
 </div>

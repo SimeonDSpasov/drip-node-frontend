@@ -1,0 +1,106 @@
+@if (options) {
+    @if (options.formGroup && options.formControlName) {
+        <div class="container" (click)="activateDropdown()" (mousedown)="preventFocusChange($event)">
+            @if (options.label !== '') {
+                <div class="header">
+                    <div class="label-wrapper">
+                        <label>{{ options.label }}</label>
+    
+                        @if (options.tooltip) {
+                            <svg class="tooltip-icon" [ipiTooltip]="options.tooltip" [tooltipPosition]="tooltipPosition.Above" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g>
+                                    <path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.5 7.5H8V11h.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M8.25 5.25a.25.25 0 1 1-.5 0 .25.25 0 0 1 .5 0z" fill="#fff"/>
+                                </g>
+                            </svg>
+                        }
+                    </div>
+    
+                    @if (options.helperText) {
+                        <div class="header-helper" (click)="onHelperText()" [routerLink]="options.helperRoute">{{ options.helperText }}</div>
+                    }
+                </div>
+            }
+
+            <div #inputWrapper class="input-field-wrapper" [formGroup]="options.formGroup" [ngClass]="{ 'invalid': checkIfControlInvalid(), 'disabled': checkIfControlDisabled() }">
+                @if (options.prefixImg) {
+                    <ipi-img class="prefix" [src]="'assets/img/' + this.options.prefixImg" [ariaLabel]="'Select prefix icon'"></ipi-img>
+                }
+
+                @if (options.searchable && options.multiple && this.showMultipleCount() > 0) {
+                    @if (options.counterAsValue) {
+                        <span class="multiple-count">
+                            {{ this.showMultipleCount() }} selected
+                        </span>
+                    } @else {
+                        <div class="chips">
+                            @for (data of options.data; track $index) {
+                                @if (isMultipleSelected(data)) {
+                                    <ipi-chip [closeIcon]="true" (closeChange)="setMultipleValue(data)">{{ data.label }}</ipi-chip>
+                                }
+                            }
+                        </div>
+                    }
+                }
+
+                @if (options.searchable) {
+                    <!-- used for formControl data binding and reactivness -->
+                    <input #hiddenInput
+                        class="hidden"
+                        [formControlName]="options.formControlName">
+
+                    <!-- used for searching and data displaying -->
+                    <input #input
+                        [placeholder]="getPlaceholder()"
+                        [readOnly]="!options.searchable"
+                        [ngClass]="{ 'no-icon': !options.prefixImg }"
+                        (keydown)="handleKeydown($event)"
+                        (focusin)="activateDropdown()"
+                        (focusout)="removeDropdown()"
+                        (input)="options.searchable ? onSearch(input.value, true) : null">
+                } @else {
+                    <input #input [placeholder]="getPlaceholder()" readonly [ngClass]="{ 'no-icon': !options.prefixImg }" (ngModelChange)="setVisibleValue($event)" [formControlName]="options.formControlName" />
+                }
+ 
+                <div class="arrow-wrapper">
+                    <div class="arrow" [class]="{ checked: this.isDropdown }"></div>
+                </div>
+            </div>
+
+            @if (isDropdown) {
+                <div #dropdown class="dropdown">
+
+                    @if (filteredData.length) {
+                        @for (data of filteredData; track $index) {
+                            @if (options.multiple) {
+                                <div class="option checkbox" [ngClass]="{ selected: isMultipleSelected(data), preselected: data.isHover}" (click)="setMultipleValue(data, $event)">
+                                    <ipi-checkbox [checked]="isMultipleSelected(data)">
+                                        <div class="multiple-checkbox-container">
+                                            <span>{{ data.label }}</span>
+
+                                            @if (data.description) {
+                                                <span>{{ data.description }}</span>
+                                            }
+                                        </div>
+                                    </ipi-checkbox>
+                                </div>
+
+                                @if (data.description && filteredData.length - 1 !== $index) {
+                                    <div class="options-divider"></div>
+                                }
+                            } @else {
+                                <div class="option" [ngClass]="{ selected: isValueSelected(data), preselected: data.isHover}" (click)="setValue(data)">
+                                    {{ data.label }}
+                                </div>
+                            }
+                        }
+                    } @else {
+                        <div class="option disabled">
+                            No options to select from.
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+}

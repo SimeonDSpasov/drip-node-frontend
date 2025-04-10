@@ -1,3 +1,42 @@
-<div class="container">
+<div class="container" [class.hidden]="isExpanded">
+    <a [routerLink]="'/'">
+        <h2>DRIPNODE</h2>
+    </a>
+
+    <div class="buttons">
+        <div class="btn hover-darken" (click)="triggerAnimation()">
+            <ipi-img src="assets/icons/cart.svg" ariaLabel="Cart icon."></ipi-img>
+        </div>
     
+        <div class="btn hover-darken" (click)="triggerAnimation()">
+            <ipi-img src="assets/icons/list.svg" ariaLabel="Menu icon."></ipi-img>
+        </div>
+    </div>
 </div>
+
+@if (isExpanded) {
+    <div class="expandable" [@NavigationMobileAnimation]>
+        <div>
+            <div class="top" (click)="triggerAnimation()">
+                <a [routerLink]="'/'">
+                    <h2>DRIPNODE</h2>
+                </a>
+            
+                <ipi-img src="assets/icons/x.svg" [ariaLabel]="'Close icon.'"></ipi-img>
+            </div>
+
+            <div class="middle">
+                @for (item of navigationOptions; track $index) {
+                    <a class="option"
+                        [routerLink]="item.path"
+                        [class.active]="activeOptionIndex === $index"
+                        [state]="{ ind: $index, scrollTo: item.scrollTo ? item.scrollTo : null }"
+                        (click)="triggerAnimation()">
+
+                        {{ item.label }}
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+}

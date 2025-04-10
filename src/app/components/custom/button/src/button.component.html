@@ -1,0 +1,29 @@
+<a [class]="['button']"
+   [routerLink]="link"
+   [state]="state"
+   (click)="onClick($event)"
+   (keydown)="handleKeydown($event)"
+   (focusin)="onFocusChange($event)"
+   (focusout)="onFocusChange($event)"
+   tabindex="0"
+   role="button"
+   [attr.aria-label]="ariaLabel">
+   
+    <div class="button-wrapper">
+        @if (options && options.iconLeft) {
+            <div class="icon left">
+                <ipi-img [src]="'assets/img/' + options.iconLeft" [ariaLabel]="'Left side of button icon.'"></ipi-img>
+            </div>
+        }
+
+        <span>
+            <ng-content></ng-content>
+        </span>
+
+        @if (options && options.iconRight) {
+            <div class="icon right">
+                <ipi-img [src]="'assets/img/' + options.iconRight" [ariaLabel]="'Right side of button icon.'"></ipi-img>
+            </div>
+        }
+    </div>
+</a>

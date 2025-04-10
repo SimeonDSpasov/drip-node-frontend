@@ -1,0 +1,22 @@
+<div
+    class="custom-snackbar"
+    [class.error]="options.error"
+    [ngClass]="[ 'horizontal-' + positionOptions.horizontalPosition, 'vertical-' + positionOptions.verticalPosition]"
+    [style.ipi-snackbar-animation-duration]="options.animationDuration + 's'">
+
+    <div class="placeholder-wrapper">
+        @if (options.icon) {
+            <ipi-img [src]="'assets/img/' + options.icon" [ariaLabel]="'Snackbar prefix icon'"></ipi-img>
+        }
+
+        <div class="placeholder">{{ options.error ? 'Error' : 'Success' }}</div>
+
+        <div class="x-icon" (click)="closed.emit()"></div>
+    </div>
+
+    <div class="message-wrapper" [ngClass]="{ 'no-padding' : !options.icon }">
+        <div class="message">{{ message }}</div>
+    </div>
+
+    <div class="progress" [style.animation-duration]="options.animationDuration + 's'"></div>
+</div>

@@ -1,0 +1,76 @@
+<div class="container">
+    <div class="header">
+        <span 
+            tabindex="0"
+            class="active-date-view"
+            (click)="calendarDateViewChange()"
+            (keydown)="onCalendarDateViewKeydown($event)">
+                {{ viewButtonText }}
+        </span>
+
+        <div class="header-navigation">
+            <div class="chevron-wrapper"
+                tabindex="0"
+                [class.disabled]="!previousEnabled()"
+                (click)="goToPreviousView()"
+                (keydown)="onArrowKeydown($event, 'previous')">
+                    <span class="chevron left"></span>
+            </div>
+
+            <div class="chevron-wrapper" 
+                tabindex="0"
+                [class.disabled]="!nextEnabled()"    
+                (click)="goToNextView()"
+                (keydown)="onArrowKeydown($event, 'next')">
+                    <span class="chevron right"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="calendar">
+        @switch (activeDateView) {
+            @case ('month') {
+                <ipi-calendar-month-view
+                    [(activeDate)]="activeDate"
+                    [(selected)]="selected"
+                    [maxDate]="maxDate"
+                    [minDate]="minDate"
+                    (userSelection)="dateSelected($event)"
+                    (dragStarted)="dragStarted($event)"
+                    (dragEnded)="dragEnded($event)"
+                    [activeDrag]="activeDrag">
+                </ipi-calendar-month-view>
+            }
+
+            @case ('year') {
+                <ipi-calendar-year-view
+                    [(activeDate)]="activeDate"
+                    [selected]="selected"
+                    [maxDate]="maxDate"
+                    [minDate]="minDate"
+                    (monthSelected)="monthSelectedInYearView($event)"
+                    (selectedChange)="goToDateInView($event, 'month')">
+                </ipi-calendar-year-view>
+            }
+
+            @case ('multi-year') {
+                <ipi-calendar-multi-year-view
+                    [(activeDate)]="activeDate"
+                    [selected]="selected"
+                    [maxDate]="maxDate"
+                    [minDate]="minDate"
+                    (yearSelected)="yearSelectedInMultiYearView($event)"
+                    (selectedChange)="goToDateInView($event, 'year')">
+                </ipi-calendar-multi-year-view>
+            }
+          }
+    </div>
+</div>
+
+<ipi-button
+    [ariaLabel]="'Button for closing the calendar.'" 
+    (clickChange)="calendarClose.emit($event)" 
+    (focusChange)="toggleButtonVisibility($event)"
+    [class.cdk-visually-hidden]="isButtonHidden">
+        Close Calendar
+</ipi-button>

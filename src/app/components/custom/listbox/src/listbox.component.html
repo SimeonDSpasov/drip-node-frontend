@@ -1,0 +1,30 @@
+@if (options) {
+    <div class="listbox-header">
+        @if (options.label) {
+            <label>{{ options.label }}</label>
+        }
+
+        @if (options.tooltip) {
+            <svg class="tooltip-icon" [ipiTooltip]="options.tooltip" [tooltipPosition]="tooltipPosition.Above" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g>
+                    <path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.5 7.5H8V11h.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8.25 5.25a.25.25 0 1 1-.5 0 .25.25 0 0 1 .5 0z" fill="#fff"/>
+                </g>
+            </svg>
+        }
+    </div>
+
+    <div #listbox tabindex="0" class="container" [ngClass]="{ 'error': controlInvalid }">
+        <div class="container-inner">
+            @for (data of options.data; track data.value) {
+                <div #item [attr.value]="$index" class="item" (mousedown)="mousedown(item)">
+                    {{ data.label }}
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="footer" [ngClass]="{ 'error': controlInvalid }">
+        {{ controlError }}
+    </div>
+}

@@ -1,0 +1,27 @@
+:host {
+    display: block;
+    touch-action: manipulation;
+}
+
+.container {
+    width: fit-content;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    color: var(--ipi-chip-color, #FFFFFF);
+    background-color: var(--ipi-chip-background-color, #0B1222);
+    font-size: var(--ipi-chip-font-size, 12px);
+    font-weight: 600;
+    box-sizing: border-box;
+    border-radius: 28px;
+    padding: 6px 12px;
+}
+
+svg {
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+svg path {
+    fill: var(--ipi-chip-icon-color, #FFFFFF);
+}
