@@ -5,6 +5,8 @@ import { IpiImageComponent } from './../../../custom/image';
 
 import { NavigationOption } from './../navigation.component';
 
+import { CartService } from './../../../services/cart.service';
+
 @Component({
   selector: 'app-navigation-desktop',
   templateUrl: './navigation-desktop.component.html',
@@ -17,7 +19,9 @@ import { NavigationOption } from './../navigation.component';
 
 export class NavigationDesktopComponent {
 
-  constructor() { }
+  constructor(
+    public cartService: CartService,
+  ) { }
 
   @Input() activeOptionIndex: number | null = null;
   @Input() navigationOptions: NavigationOption[] = [];

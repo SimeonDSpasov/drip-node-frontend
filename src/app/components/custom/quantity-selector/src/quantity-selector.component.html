@@ -1,0 +1,16 @@
+@if (options) {
+    @if (options.formGroup && options.formControlName) {
+      <div class="quantity-container" [formGroup]="options.formGroup">
+        <button class="quantity-btn left" (click)="decrease()">-</button>
+        <div class="quantity-value">{{ options.formGroup.controls[options.formControlName].value }}</div>
+        <button class="quantity-btn right" (click)="increase()">+</button>
+      </div>
+    } @else {
+      <div class="quantity-container">
+        <button class="quantity-btn left" (click)="decrease()">-</button>
+        <div class="quantity-value">{{ options.quantity }}</div>
+        <button class="quantity-btn right" (click)="increase()">+</button>
+      </div>
+    }
+  }
+  

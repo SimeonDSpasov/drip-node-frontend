@@ -19,7 +19,7 @@
 
     <div class="right-nav">
         <div class="cart hover-darken">
-          <div class="cart-icon">
+          <div class="cart-icon" (click)="cartService.openCart()">
             <ipi-img [src]="'assets/icons/cart.svg'" [ariaLabel]="'Cart icon'"></ipi-img>
           </div>
         </div>

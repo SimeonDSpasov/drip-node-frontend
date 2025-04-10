@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 
 import { FooterComponent } from './footer/footer.component';
 import { NavigationComponent } from './navigation/navigation.component';
+import { CartComponent } from './../cart/cart.component';
 
 import { PlatformService } from './../services/platform.service';
 
@@ -12,6 +13,7 @@ import { PlatformService } from './../services/platform.service';
   styleUrls: ['./layout.component.css'],
   imports: [
     RouterOutlet,
+    CartComponent,
     FooterComponent,
     NavigationComponent,
   ],

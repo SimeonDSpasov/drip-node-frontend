@@ -13,7 +13,7 @@ export const NavigationMobileAnimation = trigger(
           animate(rowsEnterDuration, style({ opacity: '1' }))
         ]),
         style({ width: '0px' }),
-        animate(mainDuration, style({ width: '100%' }))
+        animate(mainDuration, style({ width: '*' })) // animate to natural width set by CSS
       ])
     ]),
     transition(':leave', [

@@ -7,6 +7,7 @@ import { IpiImageComponent } from './../../../custom/image';
 import { ScrollBlockService } from './../../../custom/services';
 
 import { NavigationMobileAnimation } from './../../../../animations/navigation-mobile.animation';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-navigation-mobile',
@@ -22,6 +23,7 @@ import { NavigationMobileAnimation } from './../../../../animations/navigation-m
 export class NavigationMobileComponent {
 
   constructor(
+    public cartService: CartService,
     private scrollBlockService: ScrollBlockService,
   ) { }
 
@@ -33,7 +35,15 @@ export class NavigationMobileComponent {
   public triggerAnimation(): void {
     this.isExpanded = !this.isExpanded;
 
-    this.isExpanded ? this.scrollBlockService.activate() : this.scrollBlockService.deactivate();
+    if (this.isExpanded) {
+      setTimeout(() => {
+        this.scrollBlockService.activate();
+      }, 350);
+
+      return;
+    }
+
+    this.scrollBlockService.deactivate();
   }
 
 }
