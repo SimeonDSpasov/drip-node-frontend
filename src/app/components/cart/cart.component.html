@@ -1,33 +1,49 @@
-@if (cartForm) {
-    <form [formGroup]="cartForm">
-        @for (item of cartItems; track $index) {
-            <div class="cart-item">
-                <div class="product-info">
-                  <h3>{{ item.name }}</h3>
-                  <p>{{ item.description }}</p>
-                  <p>Price: ${{ item.price }}</p>
-                </div>
-          
-                <div class="quantity-selector">
-                  <app-quantity-selector
-                    [options]="{
-                      formGroup: cartForm,
-                      formControlName: item.id,
-                      min: 1,
-                      max: 99
-                    }"
-                    (quantityChange)="onQuantityChanged(item.id, $event)">
-                  </app-quantity-selector>
-                </div>
-              </div>
-        }
-      </form>
-}
-
 @if (isExpanded) {
+  <div class="backdrop" (click)="onClose()"></div>
+
     <div class="expandable" [@NavigationMobileAnimation]>
         <div>
+            <div class="first-section">
+                <div class="header">
+                    <h2>Кошница</h2>
 
+                    <ipi-img src="assets/icons/x.svg" [ariaLabel]="'Close icon.'" (click)="onClose()"></ipi-img>
+                </div>
+
+                @if (cartForm) {
+                    <form [formGroup]="cartForm">
+                        @for (item of cartItems; track $index) {
+                            <div class="cart-item">
+                                <div class="product-info">
+                                <h3>{{ item.name }}</h3>
+                                <p>{{ item.description }}</p>
+                                <p>Price: ${{ item.price }}</p>
+                                </div>
+                        
+                                <div class="quantity-selector">
+                                <app-quantity-selector
+                                    [options]="{
+                                    formGroup: cartForm,
+                                    formControlName: item.id,
+                                    min: 1,
+                                    max: 99
+                                    }"
+                                    (quantityChange)="onQuantityChanged(item.id, $event)">
+                                </app-quantity-selector>
+                                </div>
+                            </div>
+                        }
+                    </form>
+                }
+            </div>
+
+            <div class="bottom-navigation">
+              <ipi-button class="fluid">Продължи пазаруването</ipi-button>
+
+              <ipi-button class="fluid">Плащане</ipi-button>
+            </div>
         </div>
     </div>
+
 }
+

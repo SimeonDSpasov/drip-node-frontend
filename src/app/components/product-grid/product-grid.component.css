@@ -1,0 +1,38 @@
+.product-grid-section {
+    padding: 2rem 0;
+    border-top: 1px solid black;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: normal;
+    margin: 0 0 1.5rem;
+    padding: 0 1rem;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+.product-wrapper {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .product-grid-section {
+        padding: 1rem 0;
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+} 

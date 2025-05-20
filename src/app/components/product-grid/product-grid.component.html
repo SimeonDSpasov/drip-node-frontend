@@ -1,0 +1,13 @@
+<div class="product-grid-section">
+    <h2 class="section-title">{{ title }}</h2>
+    <div class="products-grid">
+        @for (product of filteredProducts; track product.id) {
+            <button 
+                class="product-wrapper"
+                (click)="onProductClick(product)">
+            <app-product [product]="product"></app-product>
+        </button>
+        }
+
+    </div>
+</div> 

@@ -13,6 +13,13 @@
     gap: 32px;
 }
 
+.left-nav a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
 .options {
   display: flex;
   column-gap: 32px;  
@@ -20,7 +27,18 @@
 }
 
 .option {
-    padding: 4px;
+    width: 100px;
+    padding: 8px 4px;
+    border: 1px solid #000;
+}
+
+.option:hover {
+    width: 100px;
+    padding: 8px 4px;
+    background-color: #000;
+    color: #FFF;
+    transition: 0.2s ease-in;
+    border: 1px solid #000;
 }
 
 .cart {

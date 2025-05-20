@@ -4,7 +4,7 @@
     position: fixed;
     top: 0px;
     right: 0px;
-    background-color: rgb(211, 174, 174);
+    background-color: #ffffff;
     box-sizing: border-box;
     padding: 24px 16px;
     user-select: none;
@@ -13,15 +13,50 @@
     /* Default mobile style (full width) */
 }
 
+.backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(17, 24, 39, 0.5); /* Tailwind Gray-900 at 50% opacity */
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    z-index: 998;
+    
+  }
+
 .expandable > div {
     width: 100%;
     height: 100%;
     max-width: 344px;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     justify-content: space-between;
     margin: 0 auto;
 }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+.bottom-navigation {
+  width: 100%;
+}
+
+ipi-button {
+  width: 100%;
+  margin: 0 8px 8px 0;
+}
+
 
 /* Desktop styles */
 @media (min-width: 940px) {

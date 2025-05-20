@@ -1,0 +1,34 @@
+<div class="container mt-4">
+  <h2>Product Fetcher</h2>
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="productId" class="form-label">Product ID</label>
+      <input
+        type="text"
+        class="form-control"
+        id="productId"
+        formControlName="productId"
+        placeholder="Enter product ID"
+      >
+    </div>
+    <div class="mb-3">
+      <label for="platform" class="form-label">Platform</label>
+      <select class="form-select" id="platform" formControlName="platform">
+        <option value="WEIDIAN">Weidian</option>
+        <option value="TAOBAO">Taobao</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">
+      Fetch Product
+    </button>
+  </form>
+
+  <div *ngIf="fetchedProduct" class="mt-4">
+    <h3>Fetched Product:</h3>
+    <pre>{{ fetchedProduct | json }}</pre>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger mt-3">
+    {{ error }}
+  </div>
+</div> 

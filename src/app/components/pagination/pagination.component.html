@@ -1,0 +1,41 @@
+<div class="pagination-container">
+    <div class="products-controls">
+        <div class="items-per-page">
+            <label for="itemsPerPage">Items per page:</label>
+            <select 
+                id="itemsPerPage" 
+                [(ngModel)]="itemsPerPage" 
+                (change)="onItemsPerPageChange()"
+                class="items-per-page-select">
+                @for (option of itemsPerPageOptions; track option) {
+                    <option [value]="option">{{ option }}</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="pagination">
+        <button 
+            class="pagination-button" 
+            [disabled]="currentPage === 1"
+            (click)="onPageChange(currentPage - 1)">
+            Previous
+        </button>
+        
+        @for (page of [].constructor(totalPages); track page; let i = $index) {
+            <button 
+                class="pagination-button" 
+                [class.active]="currentPage === i + 1"
+                (click)="onPageChange(i + 1)">
+                {{ i + 1 }}
+            </button>
+        }
+
+        <button 
+            class="pagination-button" 
+            [disabled]="currentPage === totalPages"
+            (click)="onPageChange(currentPage + 1)">
+            Next
+        </button>
+    </div>
+</div> 

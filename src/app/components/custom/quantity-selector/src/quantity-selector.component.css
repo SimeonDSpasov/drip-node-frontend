@@ -21,13 +21,13 @@
   }
 
   .quantity-btn.right {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
   }
 
   .quantity-btn.left {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
   }
   
   .quantity-btn:hover {

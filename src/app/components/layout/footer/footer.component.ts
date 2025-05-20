@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PlatformService } from './../../services/platform.service';
 
 @Component({
+  standalone: true,
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css'],

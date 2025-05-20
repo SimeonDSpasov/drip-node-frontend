@@ -2,9 +2,14 @@
 
 
 @import './app/styles/global.css';
+@import './app/styles/button.css';
 
 * {
     font-family: "Roboto", sans-serif;
     box-sizing: border-box;
+}
+
+body {
+    margin: 0;
 }
 

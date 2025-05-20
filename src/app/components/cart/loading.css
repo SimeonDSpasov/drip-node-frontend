@@ -1,29 +1,9 @@
-.backdrop {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    background-color: var(--ipi-loader-backdrop-background, #0B1222);
-    opacity: 0.1;
-    pointer-events: all;
-    z-index: 999;
-}
-
-.container {
-    z-index: 911;
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 99;
-}
-
+/* HTML: <div class="loader"></div> */
 .loader {
     width: 55px;
     aspect-ratio: 1;
-    --g1:conic-gradient(from  90deg at top    3px left  3px,#0000 90deg,#000000 0);
-    --g2:conic-gradient(from -90deg at bottom 3px right 3px,#0000 90deg,#000000 0);
+    --g1:conic-gradient(from  90deg at top    3px left  3px,#0000 90deg,#fff 0);
+    --g2:conic-gradient(from -90deg at bottom 3px right 3px,#0000 90deg,#fff 0);
     background:
       var(--g1),var(--g1),var(--g1),var(--g1), 
       var(--g2),var(--g2),var(--g2),var(--g2);

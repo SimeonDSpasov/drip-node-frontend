@@ -1,0 +1,81 @@
+<div class="product-page" *ngIf="product">
+    <div class="product-gallery">
+        <div class="main-image">
+            <ipi-img [src]="selectedImage" [ariaLabel]="'todo'"></ipi-img>
+        </div>
+        <div class="thumbnail-images">
+            <div class="thumbnail" [class.active]="selectedImage === product.primaryImage" (click)="selectImage(product.primaryImage)">
+                <ipi-img [src]="product.primaryImage" [ariaLabel]="'todo'"></ipi-img>
+            </div>
+            <div class="thumbnail" [class.active]="selectedImage === product.secondaryImage" (click)="selectImage(product.secondaryImage)">
+                <ipi-img [src]="product.secondaryImage" [ariaLabel]="'todo'"></ipi-img>
+            </div>
+            <div class="thumbnail" *ngFor="let image of additionalImages" [class.active]="selectedImage === image" (click)="selectImage(image)">
+                <ipi-img [src]="image" [ariaLabel]="'todo'"></ipi-img>
+            </div>
+        </div>
+    </div>
+
+    <div class="product-details">
+        <h1 class="product-title">{{ product.productTitle }}</h1>
+        <p class="product-price">${{ product.productPrice }}</p>
+        <p class="product-description">{{ product.description }}</p>
+
+        <div class="product-options">
+            <div class="option-group">
+                <h3>Size</h3>
+                <div class="option-buttons">
+                    <button 
+                        *ngFor="let size of product.sizes" 
+                        class="option-button"
+                        [class.selected]="selectedSize === size.value"
+                        [class.unavailable]="!size.available"
+                        [disabled]="!size.available"
+                        (click)="selectSize(size.value)">
+                        {{ size.value }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <h3>Color</h3>
+                <div class="option-buttons">
+                    <button 
+                        *ngFor="let color of product.colors" 
+                        class="option-button"
+                        [class.selected]="selectedColor === color.value"
+                        [class.unavailable]="!color.available"
+                        [disabled]="!color.available"
+                        (click)="selectColor(color.value)">
+                        {{ color.value }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <h3>Type</h3>
+                <div class="option-buttons">
+                    <button 
+                        *ngFor="let type of product.types" 
+                        class="option-button"
+                        [class.selected]="selectedType === type.value"
+                        [class.unavailable]="!type.available"
+                        [disabled]="!type.available"
+                        (click)="selectType(type.value)">
+                        {{ type.value }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <button class="add-to-cart-button" (click)="addToCart()">Add to Cart</button>
+    </div>
+</div>
+
+<app-product-grid 
+    *ngIf="allProducts.length > 0"
+    [products]="allProducts"
+    [title]="'You may also like'"
+    [excludeProductId]="product?.id"
+    (productClick)="onProductClick($event)">
+</app-product-grid> 

@@ -1,0 +1,32 @@
+<div class="products-page">
+    <div class="products-controls">
+        <div class="items-per-page">
+            <label for="itemsPerPage">Items per page:</label>
+            <select 
+                id="itemsPerPage" 
+                [(ngModel)]="itemsPerPage" 
+                (change)="onItemsPerPageChange(itemsPerPage)"
+                class="items-per-page-select">
+                @for (option of itemsPerPageOptions; track option) {
+                    <option [value]="option">{{ option }}</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="products-grid">
+        <app-product
+            *ngFor="let product of paginatedProducts"
+            [product]="product">
+        </app-product>
+    </div>
+
+    <app-pagination
+        [currentPage]="currentPage"
+        [totalItems]="products.length"
+        [itemsPerPage]="itemsPerPage"
+        [itemsPerPageOptions]="itemsPerPageOptions"
+        (pageChange)="onPageChange($event)"
+        (itemsPerPageChange)="onItemsPerPageChange($event)">
+    </app-pagination>
+</div> 

@@ -1,0 +1,20 @@
+<div class="product-card" (click)="navigateToProduct()">
+  <div class="product-image">
+    <ipi-img
+      [src]="product.primaryImage"
+      [ariaLabel]="product.productTitle">
+    </ipi-img>
+    <div class="product-actions">
+      <button class="action-button" (click)="addToCart($event)">
+        <img src="assets/icons/cart.svg" alt="Add to cart">
+      </button>
+      <button class="action-button" (click)="addToWishlist($event)">
+        <img src="assets/icons/heart.svg" alt="Add to wishlist">
+      </button>
+    </div>
+  </div>
+  <div class="product-info">
+    <h3 class="product-title">{{ product.productTitle }}</h3>
+    <p class="product-price">${{ product.productPrice.toFixed(2) }}</p>
+  </div>
+</div>

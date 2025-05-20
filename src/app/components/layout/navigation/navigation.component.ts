@@ -15,6 +15,7 @@ export interface NavigationOption {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css'],
