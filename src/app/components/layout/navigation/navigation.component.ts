@@ -7,6 +7,7 @@ import { NavigationMobileComponent } from './navigation-mobile/navigation-mobile
 import { NavigationDesktopComponent } from './navigation-desktop/navigation-desktop.component';
 
 import { PlatformService } from './../../services/platform.service';
+import { UserService } from './../../../services/user.service';
 
 export interface NavigationOption {
   label: string;
@@ -25,12 +26,11 @@ export interface NavigationOption {
   ],
 })
 
-export class NavigationComponent {
-
+export class NavigationComponent implements AfterViewInit, OnDestroy {
   constructor(
     private router: Router,
-    private platformService: PlatformService) {
-
+    private platformService: PlatformService,
+    private userService: UserService) {
   }
 
   private routeSubscription!: Subscription;
@@ -51,10 +51,38 @@ export class NavigationComponent {
       label: 'Въпроси',
       path: '',
       // scrollTo: 'faq',
-    },
+    }
   ];
 
+  public adminNavigationOptions: NavigationOption[] = [
+    {
+      label: 'Admin Panel',
+      path: 'admin'
+    }
+  ];
+
+  public get navigationOptions(): NavigationOption[] {
+    if (this.userService.isUserAdmin() || this.userService.isUserMasterAdmin()) {
+      return [...this.guestNavigationOptions, ...this.adminNavigationOptions];
+    }
+    return this.guestNavigationOptions;
+  }
+
+  ngAfterViewInit(): void {
+    this.subscribeToRouterEvents();
+  }
+
+  ngOnDestroy(): void {
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
+  }
+
   private subscribeToRouterEvents(): void {
+    if (this.platformService.isServer()) {
+      return;
+    }
+
     this.routeSubscription = this.router.events.subscribe(event => {
       if (!(event instanceof NavigationEnd)) {
         return;
@@ -72,7 +100,7 @@ export class NavigationComponent {
         this.activeOptionIndex = history.state.ind;
       }
       else {
-        const index = this.guestNavigationOptions.findIndex(option => option.path === path && !option.scrollTo);
+        const index = this.navigationOptions.findIndex(option => option.path === path && !option.scrollTo);
 
         this.activeOptionIndex = index !== -1 ? index : null;
       }

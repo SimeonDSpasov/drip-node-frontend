@@ -1,6 +1,7 @@
 import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 
 import { OverlayService } from './../overlay.service';
+import { PlatformService } from './../../../../services/platform.service';
 
 import { IpiLoaderComponent } from './loader.component';
 
@@ -11,6 +12,7 @@ import { IpiLoaderComponent } from './loader.component';
 export class LoaderService {
 
   constructor(
+    private platformService: PlatformService,
     private overlayService: OverlayService) { }
 
   private viewContainerRef: ViewContainerRef | null = null;
@@ -24,6 +26,7 @@ export class LoaderService {
    * @param appContainerElement - An optional app container selector. When provided it will set opacity 0.4 to that container when Loader is shown. Example - '.app-container'
    */
   public init(viewContainerRef: ViewContainerRef, appContainerElement?: string) {
+    if (this.platformService.isServer()) {return;}
     this.viewContainerRef = viewContainerRef;
 
     if (appContainerElement) {

@@ -22,14 +22,38 @@
             Previous
         </button>
         
-        @for (page of [].constructor(totalPages); track page; let i = $index) {
+        <!-- First page -->
+        <button 
+            class="pagination-button" 
+            [class.active]="currentPage === 1"
+            (click)="onPageChange(1)">
+            1
+        </button>
+
+        <!-- Left ellipsis -->
+        <span *ngIf="currentPage > 3" class="pagination-ellipsis">...</span>
+
+        <!-- Pages around current page -->
+        <ng-container *ngFor="let page of getPageNumbers()">
             <button 
                 class="pagination-button" 
-                [class.active]="currentPage === i + 1"
-                (click)="onPageChange(i + 1)">
-                {{ i + 1 }}
+                [class.active]="currentPage === page"
+                (click)="onPageChange(page)">
+                {{ page }}
             </button>
-        }
+        </ng-container>
+
+        <!-- Right ellipsis -->
+        <span *ngIf="currentPage < totalPages - 2" class="pagination-ellipsis">...</span>
+
+        <!-- Last page -->
+        <button 
+            *ngIf="totalPages > 1"
+            class="pagination-button" 
+            [class.active]="currentPage === totalPages"
+            (click)="onPageChange(totalPages)">
+            {{ totalPages }}
+        </button>
 
         <button 
             class="pagination-button" 

@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:node-drip": "node dist/node-drip/server/server.mjs",
-    "build-prod": "ng build --c=defaultForBuild,prod",
+    "build-prod": "ng build --configuration=production",
     "serve:ssr": "node dist/frontend/server/server.mjs"
   },
   "private": true,

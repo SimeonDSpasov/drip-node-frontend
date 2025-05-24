@@ -22,6 +22,32 @@ export class PaginationComponent {
     return Math.ceil(this.totalItems / this.itemsPerPage);
   }
 
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxPagesToShow = 3;
+    
+    // Calculate start and end page numbers
+    let startPage = Math.max(2, this.currentPage - 1);
+    let endPage = Math.min(this.totalPages - 1, this.currentPage + 1);
+    
+    // Adjust if we're near the start
+    if (startPage <= 2) {
+      endPage = Math.min(this.totalPages - 1, maxPagesToShow);
+    }
+    
+    // Adjust if we're near the end
+    if (endPage >= this.totalPages - 1) {
+      startPage = Math.max(2, this.totalPages - maxPagesToShow);
+    }
+    
+    // Add pages to array
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    
+    return pages;
+  }
+
   onPageChange(page: number): void {
     this.pageChange.emit(page);
   }

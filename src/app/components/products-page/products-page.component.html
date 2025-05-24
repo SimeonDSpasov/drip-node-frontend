@@ -1,5 +1,8 @@
 <div class="products-page">
     <div class="products-controls">
+        <div class="total-items">
+            Total Products: {{ totalItems }}
+        </div>
         <div class="items-per-page">
             <label for="itemsPerPage">Items per page:</label>
             <select 
@@ -16,14 +19,14 @@
 
     <div class="products-grid">
         <app-product
-            *ngFor="let product of paginatedProducts"
+            *ngFor="let product of products"
             [product]="product">
         </app-product>
     </div>
 
     <app-pagination
         [currentPage]="currentPage"
-        [totalItems]="products.length"
+        [totalItems]="totalItems"
         [itemsPerPage]="itemsPerPage"
         [itemsPerPageOptions]="itemsPerPageOptions"
         (pageChange)="onPageChange($event)"

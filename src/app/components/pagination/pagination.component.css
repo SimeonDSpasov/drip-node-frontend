@@ -52,4 +52,9 @@
 .pagination-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.pagination-ellipsis {
+    padding: 0.5rem;
+    color: #666;
 } 

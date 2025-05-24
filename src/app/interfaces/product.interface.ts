@@ -1,14 +1,8 @@
 export interface Product {
   id: string;
-  productTitle: string;
-  productPrice: number;
-  primaryImage: string;
-  secondaryImage: string;
-  description: string;
-  sizes: ProductVariant[];
-  colors: ProductVariant[];
-  types: ProductVariant[];
-  additionalImages?: string[];
+  title: string;
+  price: number;
+  images: string[];
 }
 
 export interface ProductVariant {

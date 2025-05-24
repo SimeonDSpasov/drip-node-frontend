@@ -6,6 +6,8 @@ import { CartComponent } from './../cart/cart.component';
 import { FooterComponent } from './footer/footer.component';
 import { NavigationComponent } from './navigation/navigation.component';
 
+import { UserService } from './../../services/user.service';
+
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
@@ -20,4 +22,15 @@ import { NavigationComponent } from './navigation/navigation.component';
   ]
 })
 
-export class LayoutComponent {}
+export class LayoutComponent {
+
+  constructor(
+    private userService: UserService,
+  ) {
+    this.init();
+  }
+
+  private async init(): Promise<void> {
+    await this.userService.setUserFromDatabase();
+  }
+}

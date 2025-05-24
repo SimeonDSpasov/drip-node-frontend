@@ -14,8 +14,8 @@
 }
 
 .main-image {
-    width: 100%;
-    padding-top: 100%;
+    width: 600px;
+    height: 600px;
     position: relative;
     border: 1px solid black;
     overflow: hidden;
@@ -31,10 +31,11 @@
 }
 
 .thumbnail-images {
+    width: 600px;
     display: flex;
     gap: 1rem;
     overflow-x: auto;
-    padding: 0.5rem 0;
+    padding: 1rem;
 }
 
 .thumbnail {

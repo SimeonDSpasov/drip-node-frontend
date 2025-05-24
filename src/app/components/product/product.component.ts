@@ -1,8 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+
+import { Subscription } from 'rxjs';
+
 import { IpiImageComponent } from '../custom/image/src/ipi-img.component';
-import { Product } from '../../interfaces/product.interface';
+
+import { RateService } from './../../services/rate.service';
+import { PlatformService } from './../services/platform.service';
+
+import { Product } from './../../interfaces/product.interface';
 
 @Component({
   selector: 'app-product',
@@ -11,12 +18,32 @@ import { Product } from '../../interfaces/product.interface';
   standalone: true,
   imports: [CommonModule, IpiImageComponent]
 })
-export class ProductComponent {
-  @Input() product!: Product;
+export class ProductComponent implements OnDestroy {
 
+  @Input() product!: Product;
+  
   isSecondaryImageVisible: boolean = false;
 
-  constructor(private router: Router) {}
+  public rate: number | null = null;
+
+  private subscription!: Subscription;
+
+  constructor(
+    public rateService: RateService,
+    private platformService: PlatformService,
+    private router: Router) {
+    if (!this.platformService.isServer()) {
+      this.subscription = this.rateService.getRateObservable().subscribe((rate) => {
+        this.rate = rate;
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 
   showSecondaryImage(): void {
     this.isSecondaryImageVisible = true;

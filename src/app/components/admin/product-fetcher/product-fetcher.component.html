@@ -1,34 +1,83 @@
-<div class="container mt-4">
-  <h2>Product Fetcher</h2>
-  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <div class="mb-3">
-      <label for="productId" class="form-label">Product ID</label>
-      <input
-        type="text"
-        class="form-control"
-        id="productId"
-        formControlName="productId"
-        placeholder="Enter product ID"
-      >
+<div class="product-fetcher">
+  <form [formGroup]="productForm" (ngSubmit)="getProductData()">
+    <div class="form-group">
+      <label for="productLink">Product Link:</label>
+      <input type="text" id="productLink" formControlName="productLink" class="form-control" 
+             placeholder="Enter CNFans product link (e.g., https://cnfans.com/product?platform=WEIDIAN&id=123456)">
+      <div class="validation-error" *ngIf="productForm.get('productLink')?.invalid && productForm.get('productLink')?.touched">
+        <span *ngIf="productForm.get('productLink')?.errors?.['required']">Product link is required</span>
+        <span *ngIf="productForm.get('productLink')?.errors?.['pattern']">Please enter a valid CNFans product link</span>
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="platform" class="form-label">Platform</label>
-      <select class="form-select" id="platform" formControlName="platform">
-        <option value="WEIDIAN">Weidian</option>
-        <option value="TAOBAO">Taobao</option>
-      </select>
-    </div>
-    <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">
-      Fetch Product
-    </button>
+
+    <button type="submit" [disabled]="!productForm.valid">Fetch Product</button>
   </form>
 
-  <div *ngIf="fetchedProduct" class="mt-4">
-    <h3>Fetched Product:</h3>
-    <pre>{{ fetchedProduct | json }}</pre>
+  <div *ngIf="error" class="error-message">
+    {{ error }}
   </div>
 
-  <div *ngIf="error" class="alert alert-danger mt-3">
-    {{ error }}
+  <div *ngIf="productInfo" class="product-info">
+    <div class="main-product">
+      <div class="product-images">
+        <img [src]="productInfo.imgList[selectedImageIndex]" [alt]="productInfo.title" class="main-image">
+        <div class="thumbnail-grid" *ngIf="productInfo.imgList?.length">
+          <img *ngFor="let image of productInfo.imgList; let i = index" 
+               [src]="image" 
+               [alt]="productInfo.title" 
+               class="thumbnail"
+               [class.selected]="i === selectedImageIndex"
+               (click)="selectImage(i)">
+        </div>
+      </div>
+
+      <div class="product-details">
+        <h2 class="product-title">{{ productInfo.title }}</h2>
+        
+        <form [formGroup]="editForm" class="edit-form">
+          <div class="form-group">
+            <label for="titleTrans">Translated Title:</label>
+            <input type="text" id="titleTrans" formControlName="titleTrans" class="form-control" required>
+            <div class="validation-error" *ngIf="editForm.get('titleTrans')?.invalid && editForm.get('titleTrans')?.touched">
+              Translated title is required
+            </div>
+          </div>
+
+          <button type="button" class="save-button" (click)="saveProduct()" [disabled]="!editForm.valid">
+            Save Product
+          </button>
+        </form>
+
+        <div class="seller-info" *ngIf="productInfo.sellerInfo">
+          <img [src]="productInfo.sellerInfo.shopLogo" [alt]="productInfo.sellerInfo.shopTitle" class="shop-logo">
+          <h4>{{ productInfo.sellerInfo.shopTitle }}</h4>
+        </div>
+
+        <div class="main-price" *ngIf="productInfo.skus?.length">
+          <p class="price-label">Starting from:</p>
+          <p class="price-cny">{{ skuPrices[productInfo.skus[0].skuID].cny || formatCNYPrice(productInfo.skus[0].price) }}</p>
+          <p class="price-usd" *ngIf="skuPrices[productInfo.skus[0].skuID]?.usd">{{ skuPrices[productInfo.skus[0].skuID].usd }}</p>
+        </div>
+
+        <button class="toggle-skus" (click)="toggleSkus()">
+          {{ showSkus ? 'Hide' : 'Show' }} All SKUs ({{ productInfo.skus.length || 0 }})
+        </button>
+      </div>
+    </div>
+
+    <div class="skus-grid" *ngIf="showSkus">
+      <div *ngFor="let sku of productInfo.skus" class="sku-card">
+        <img [src]="sku.imgUrl" [alt]="sku.name" class="sku-image">
+        <div class="sku-details">
+          <h4>{{ sku.name }}</h4>
+          <p class="sku-name-trans">{{ sku.nameTrans }}</p>
+          <div class="price-container">
+            <p class="sku-price-cny">{{ skuPrices[sku.skuID].cny || formatCNYPrice(sku.price) }}</p>
+            <p class="sku-price-usd" *ngIf="skuPrices[sku.skuID].usd">{{ skuPrices[sku.skuID].usd }}</p>
+          </div>
+          <p class="sku-stock">Stock: {{ sku.stock }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div> 
