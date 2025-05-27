@@ -323,9 +323,9 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     }
 
     if (this.selection.selectedSku.stock <= 0) {
-      alert('This item is out of stock');
-      return;
-    }
+        alert('This item is out of stock');
+        return;
+      }
 
     console.log('Adding to cart:', this.selection);
   }

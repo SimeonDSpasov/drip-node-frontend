@@ -7,6 +7,7 @@ import { Product } from './../../interfaces/product.interface';
 import { ProductComponent } from './visual-product/product.component';
 import { PaginationComponent } from './../pagination/pagination.component';
 import { RequestsProductService } from './../../services/requests/requests-product.service';
+import { PaginationRequestComponent } from '../pagination-request/pagination-request.component';
 
 @Component({
   selector: 'app-products-page',
@@ -17,7 +18,8 @@ import { RequestsProductService } from './../../services/requests/requests-produ
     CommonModule,
     FormsModule,
     ProductComponent,
-    PaginationComponent
+    PaginationComponent,
+    PaginationRequestComponent
   ]
 })
 export class ProductsPageComponent implements OnInit {

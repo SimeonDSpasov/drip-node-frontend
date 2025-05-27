@@ -1,0 +1,84 @@
+<div class="pagination-request">
+  <div class="search-section">
+    <input 
+      type="text" 
+      [(ngModel)]="searchQuery" 
+      (input)="filterProducts()"
+      placeholder="Search products (supports regex patterns)"
+      class="search-input"
+    >
+    <div class="search-info" *ngIf="searchQuery">
+      Found {{ filteredResults.length }} items matching "{{ searchQuery }}"
+    </div>
+  </div>
+
+  <div class="input-group">
+    <input 
+      type="number" 
+      [(ngModel)]="startNumber" 
+      placeholder="Start number"
+      class="number-input"
+    >
+    <input 
+      type="number" 
+      [(ngModel)]="endNumber" 
+      placeholder="End number"
+      class="number-input"
+    >
+    <button 
+      (click)="makeRequests()" 
+      [disabled]="isLoading"
+      class="request-button"
+    >
+      {{ isLoading ? 'Loading...' : 'Make Requests' }}
+    </button>
+  </div>
+  <div *ngIf="results.length > 0" class="results">
+    <h3>Results:</h3>
+    <div *ngFor="let result of filteredResults" class="result-item">
+      <p>Page {{ result.pageNo }}: {{ result.data?.data?.list?.length || 0 }} items</p>
+      <div *ngIf="result.data?.data?.list" class="items-grid">
+        <div *ngFor="let item of result.data.data.list" class="item-card" (click)="getItemDetails(item.id)">
+          <div class="image-container">
+            <img 
+              [src]="getCurrentImage(item.id, item.firstImage)" 
+              alt="Product image" 
+              class="item-image"
+            >
+            <div *ngIf="hasMultipleImages(item.id)" class="image-navigation">
+              <button class="nav-button prev" (click)="previousImage(item.id, $event)">
+                <span class="arrow">←</span>
+              </button>
+              <button class="nav-button next" (click)="nextImage(item.id, $event)">
+                <span class="arrow">→</span>
+              </button>
+            </div>
+          </div>
+          <div class="item-details">
+            <div class="points-price">{{ item.pointPrice }} points</div>
+            <h4>{{ item.itemNameEn }}</h4>
+            <div class="price-details">
+              <p class="price-item">
+                <span class="price-label">CNY Price:</span>
+                <span class="price-value">¥{{ (item.pointPrice / 200).toFixed(2) }}</span>
+              </p>
+              <p class="price-item">
+                <span class="price-label">USD Price:</span>
+                <span class="price-value">${{ ((item.pointPrice / 200) * 0.14).toFixed(2) }}</span>
+              </p>
+            </div>
+            <div *ngIf="item.redeemCode" class="redeem-code-section">
+              <div class="redeem-code">
+                <span class="code-label">Redeem Code:</span>
+                <span class="code-value">{{ item.redeemCode }}</span>
+              </div>
+              <button class="copy-button" (click)="copyRedeemCode(item.redeemCode, $event)">
+                Copy
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

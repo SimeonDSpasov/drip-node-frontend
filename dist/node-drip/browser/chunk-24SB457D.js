@@ -1,0 +1,1 @@
+import{Db as t,R as o,Vb as a,Wb as c,X as e,ra as i}from"./chunk-KGVT5ALD.js";var f=class r{platformId=e(i);isServer=t(()=>c(this.platformId));isBrowser=t(()=>a(this.platformId));static \u0275fac=function(p){return new(p||r)};static \u0275prov=o({token:r,factory:r.\u0275fac,providedIn:"root"})};export{f as a};
