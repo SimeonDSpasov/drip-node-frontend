@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { lastValueFrom } from 'rxjs';
 
 import { Product } from './../../interfaces/product.interface';
-import { ProductComponent } from '../product/product.component';
-import { PaginationComponent } from '../pagination/pagination.component';
+import { ProductComponent } from './visual-product/product.component';
+import { PaginationComponent } from './../pagination/pagination.component';
 import { RequestsProductService } from './../../services/requests/requests-product.service';
 
 @Component({
@@ -21,6 +21,7 @@ import { RequestsProductService } from './../../services/requests/requests-produ
   ]
 })
 export class ProductsPageComponent implements OnInit {
+
   products: Product[] = [];
   currentPage: number = 1;
   itemsPerPage: number = 10;
@@ -37,7 +38,8 @@ export class ProductsPageComponent implements OnInit {
 
   private async loadProducts(): Promise<void> {
     try {
-      const request = this.requestsProductService.getProductsChunk(this.currentPage, this.itemsPerPage, this.itemsPerPage);
+      const skip = (this.currentPage - 1) * this.itemsPerPage;
+      const request = this.requestsProductService.getProductsChunk(skip, this.itemsPerPage);
       const response = await lastValueFrom(request);
 
       if (response.status === 200) {

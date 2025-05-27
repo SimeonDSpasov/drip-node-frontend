@@ -18,8 +18,9 @@ export const endpoints = {
     getEndUsersChunkAsAdmin: 'user/admin/get/chunk/:from/:to/:sort/:sortDirection',
   },
   product: {
-    getProductsChunk: 'cnfans/products/chunk/:from/:to/:chunkSize',
+    getProductsChunk: 'cnfans/products/chunk/:from/:to',
     getCNFansProductDetail: 'cnfans/products/:id/:platform',
+    getFinishedProduct: 'cnfans/products/:id/:platform/r',
     saveCNFansProduct: 'cnfans/products/:id/:platform/save',
   },
   exchangeRate: {

@@ -7,7 +7,7 @@ import { lastValueFrom } from 'rxjs';
 import { RateService } from './../../../services/rate.service';
 import { RequestsProductService } from './../../../services/requests/requests-product.service';
 
-import { ProductInfo } from '../../../models/product.model';
+import { ProductInfo } from './../../../models/product.model';
 
 interface SkuPrice {
   cny: string;

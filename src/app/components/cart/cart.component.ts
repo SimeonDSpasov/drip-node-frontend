@@ -69,6 +69,18 @@ export class CartComponent implements OnInit {
     console.log(`Quantity changed for ${productId}:`, quantity);
   }
 
+  removeItem(productId: string): void {
+    this.cartItems = this.cartItems.filter(item => item.id !== productId);
+    this.cartForm.removeControl(productId);
+  }
+
+  getSubtotal(): number {
+    return this.cartItems.reduce((total, item) => {
+      const quantity = this.cartForm.get(item.id)?.value || 1;
+      return total + (item.price * quantity);
+    }, 0);
+  }
+
   public isExpanded: boolean = false;
 
   private handleCartStateChange(isOpen: boolean): void {
@@ -94,6 +106,4 @@ export class CartComponent implements OnInit {
       }
     }
   }
-  
-
 }

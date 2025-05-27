@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
-import { IpiImageComponent } from '../custom/image/src/ipi-img.component';
+import { IpiImageComponent } from './../../custom/image/src/ipi-img.component';
 
-import { RateService } from './../../services/rate.service';
-import { PlatformService } from './../services/platform.service';
+import { RateService } from './../../../services/rate.service';
+import { PlatformService } from './../../services/platform.service';
 
-import { Product } from './../../interfaces/product.interface';
+import { Product } from './../../../interfaces/product.interface';
 
 @Component({
   selector: 'app-product',
@@ -54,7 +54,8 @@ export class ProductComponent implements OnDestroy {
   }
 
   navigateToProduct(): void {
-    this.router.navigate(['/product', this.product.id]);
+    console.log((this.product as any).id_2)
+    this.router.navigate([`/product/${this.product.id_2}`]);
   }
 
   addToCart(event: Event): void {

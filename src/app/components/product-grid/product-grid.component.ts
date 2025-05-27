@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Product } from '../../interfaces/product.interface';
-import { ProductComponent } from '../product/product.component';
+
+import { Product } from './../../interfaces/product.interface';
+
+import { ProductComponent } from './../landing/visual-product/product.component';
 
 @Component({
   selector: 'app-product-grid',
@@ -10,22 +12,27 @@ import { ProductComponent } from '../product/product.component';
   standalone: true
 })
 export class ProductGridComponent {
+
   @Input() products: Product[] = [];
   @Input() title: string = 'Products';
   @Input() excludeProductId?: string;
+
   @Output() productClick = new EventEmitter<Product>();
 
-  filteredProducts: Product[] = [];
+  public filteredProducts: Product[] = [];
 
-  ngOnChanges() {
-    if (this.excludeProductId) {
-      this.filteredProducts = this.products.filter(p => p.id !== this.excludeProductId);
-    } else {
+  public ngOnChanges(): void {
+    if (!this.excludeProductId) {
       this.filteredProducts = this.products;
+
+      return;
     }
+
+    this.filteredProducts = this.products.filter(p => p.id !== this.excludeProductId);
   }
 
-  onProductClick(product: Product) {
+  public onProductClick(product: Product): void {
     this.productClick.emit(product);
   }
+
 } 

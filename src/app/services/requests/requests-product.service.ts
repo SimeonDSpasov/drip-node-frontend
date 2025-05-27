@@ -19,17 +19,23 @@ export class RequestsProductService {
     private xSSService: XSSService,
     private httpService: HttpService) { }
 
-  public getProductsChunk(page: number, size: number, chunkSize: number): Observable<CustomResponse<any>> {
-    const url = env.apiUrl + env.endpoints.product.getProductsChunk.replace(':from', page.toString()).replace(':to', size.toString()).replace(':chunkSize', chunkSize.toString());
+  public getProductsChunk(skip: number, limit: number): Observable<CustomResponse<any>> {
+    const url = env.apiUrl + env.endpoints.product.getProductsChunk.replace(':from', skip.toString()).replace(':to', limit.toString());
 
-    return this.httpService.get<User>(url);
+    return this.httpService.get<any>(url);
   }
 
   // TODO: Write interface for the response
   public getCNFansProductDetail(productId: string, platform: string): Observable<CustomResponse<any>> {
     const url = env.apiUrl + env.endpoints.product.getCNFansProductDetail.replace(':id', productId).replace(':platform', platform);
 
-    return this.httpService.get<User>(url);
+    return this.httpService.get<any>(url);
+  }
+
+  public getFinishedProduct(productId: string, platform: string): Observable<CustomResponse<any>> {
+    const url = env.apiUrl + env.endpoints.product.getFinishedProduct.replace(':id', productId).replace(':platform', platform);
+
+    return this.httpService.get<any>(url);
   }
 
   public saveCNFansProduct(productId: string, platform: string, body: any): Observable<CustomResponse<any>> {

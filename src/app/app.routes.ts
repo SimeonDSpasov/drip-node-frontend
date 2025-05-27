@@ -7,7 +7,7 @@ import { UserRole } from './models/user.model';
 export const routes: Routes = [
     {
         path: '',
-        loadComponent: () => import('./components/products-page/products-page.component').then(m => m.ProductsPageComponent),
+        loadComponent: () => import('./components/landing/products-page.component').then(m => m.ProductsPageComponent),
         title: 'Dripnat',
         data: { pageName: 'Landing Page' },
       },

@@ -35,6 +35,7 @@ export class RateService {
 
     switch (response.status) {
         case 200:
+          console.log('Rate fetched:', response.data.rate);
             this.rateSubject.next(response.data.rate);
             break;
         default:

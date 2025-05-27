@@ -79,3 +79,94 @@
     [excludeProductId]="product?.id"
     (productClick)="onProductClick($event)">
 </app-product-grid>  -->
+
+<div class="product-page" *ngIf="!isLoading && !error && productInfo">
+    <div class="product-gallery">
+        <div class="main-image">
+            <ipi-img [src]="selectedImage" [ariaLabel]="productInfo.title"></ipi-img>
+        </div>
+        <div class="thumbnail-images">
+            <div *ngFor="let image of productInfo.imgList" 
+                 class="thumbnail" 
+                 [class.active]="selectedImage === image" 
+                 (click)="selectImage(image)">
+                <ipi-img [src]="image" [ariaLabel]="productInfo.title"></ipi-img>
+            </div>
+        </div>
+    </div>
+
+    <div class="product-details">
+        <h1 class="product-title">{{ savedProduct?.title || productInfo?.title }}</h1>
+        <p class="product-price">{{ selectedSkuPrice }}</p>
+
+        <div class="product-options">
+            <div class="option-group">
+                <h3>Цвят</h3>
+                <div class="selected-color-name" *ngIf="selectedColor">
+                    {{ selectedColor }}
+                    <div class="selected-color-price" *ngIf="getSelectedColorGroup()?.isSingleSku">
+                        {{ getSelectedColorGroup()?.singleSkuPrice }}
+                    </div>
+                </div>
+                <div class="color-buttons">
+                    <button 
+                        *ngFor="let group of colorGroups" 
+                        class="color-button"
+                        [class.selected]="selectedColor === group.color"
+                        (click)="selectColor(group.color)">
+                        <div class="color-image">
+                            <ipi-img [src]="group.colorImage" [ariaLabel]="group.color"></ipi-img>
+                        </div>
+                        <div class="color-price" *ngIf="group.isSingleSku && group.sizes.length > 0">
+                            {{ getFormattedPrice(group.sizes[0].sku.price) }}
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="option-group" *ngIf="selectedColor">
+                <h3>Размер</h3>
+                <div class="option-buttons" *ngIf="!isSingleSkuForSelectedColor()">
+                    <button 
+                        *ngFor="let sizeInfo of getSizesForSelectedColor()" 
+                        class="option-button size-button"
+                        [class.selected]="selectedSize === sizeInfo.size"
+                        [class.unavailable]="sizeInfo.stock <= 0"
+                        [disabled]="sizeInfo.stock <= 0"
+                        (click)="selectSize(sizeInfo.size)">
+                        <span class="size">{{ sizeInfo.size }}</span>
+                        <span class="price">{{ getFormattedPrice(sizeInfo.sku.price) }}</span>
+                    </button>
+                </div>
+                <div class="single-sku-info" *ngIf="isSingleSkuForSelectedColor()">
+                    <div class="single-sku-message">Размер не е наличен за този цвят</div>
+                    <div class="single-sku-price" *ngIf="getSingleSkuPrice()">
+                        {{ getSingleSkuPrice() }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="add-to-cart-button" 
+                [disabled]="selectedSkuStock <= 0"
+                (click)="addToCart()">
+            {{ selectedSkuStock <= 0 ? 'Избери модел' : 'Добави в количка' }}
+        </button>
+    </div>
+</div>
+
+<div *ngIf="isLoading" class="loading">
+    Loading product...
+</div>
+
+<div *ngIf="error" class="error">
+    {{ error }}
+</div>
+
+<!-- <app-product-grid 
+    *ngIf="savedProduct"
+    [products]="[savedProduct]"
+    [title]="'You may also like'"
+    [excludeProductId]="savedProduct.id"
+    (productClick)="onProductClick($event)">
+</app-product-grid> -->

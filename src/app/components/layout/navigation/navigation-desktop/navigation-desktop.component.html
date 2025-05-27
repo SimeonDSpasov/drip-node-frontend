@@ -1,18 +1,15 @@
 <div class="container">
     <div class="left-nav">
         <a [routerLink]="'/'">
-            <ipi-img [src]="'assets/icons/drop.svg'" [ariaLabel]="'Dripnat logo'"></ipi-img>
-
-            <h2>DRIPNAT</h2>
+            <ipi-img [src]="'assets/img/dripnat.png'" [ariaLabel]="'Dripnat logo'"></ipi-img>
         </a>
     
-        <div class="options shine-top-left">
+        <div class="options">
             @for (item of navigationOptions; track $index) {
                 <a class="option"
                     [routerLink]="item.path"
                     [class.active]="activeOptionIndex === $index"
                     [state]="{ ind: $index, scrollTo: item.scrollTo ? item.scrollTo : null }">
-    
                     {{ item.label }}
                 </a>
             }
@@ -20,11 +17,10 @@
     </div>
 
     <div class="right-nav">
-        <div class="cart hover-darken" (click)="cartService.openCart()">
-          <div class="cart-icon">
-            <ipi-img [src]="'assets/icons/cart.svg'" [ariaLabel]="'Cart icon'"></ipi-img>
-          </div>
+        <div class="cart" (click)="cartService.openCart()">
+            <div class="cart-icon">
+                <ipi-img [src]="'assets/icons/cart.svg'" [ariaLabel]="'Cart icon'"></ipi-img>
+            </div>
         </div>
-      </div>
-
+    </div>
 </div>

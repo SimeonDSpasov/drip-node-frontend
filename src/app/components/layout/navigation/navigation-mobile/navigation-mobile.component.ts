@@ -7,7 +7,8 @@ import { IpiImageComponent } from './../../../custom/image';
 import { ScrollBlockService } from './../../../custom/services';
 
 import { NavigationMobileAnimation } from './../../../../animations/navigation-mobile.animation';
-import { CartService } from '../../../services/cart.service';
+
+import { CartService } from './../../../services/cart.service';
 
 @Component({
   selector: 'app-navigation-mobile',
