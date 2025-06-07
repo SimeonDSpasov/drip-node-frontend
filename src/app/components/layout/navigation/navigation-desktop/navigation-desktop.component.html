@@ -20,6 +20,11 @@
         <div class="cart" (click)="cartService.openCart()">
             <div class="cart-icon">
                 <ipi-img [src]="'assets/icons/cart.svg'" [ariaLabel]="'Cart icon'"></ipi-img>
+                @if (cartCount > 0) {
+                    <div class="cart-count" [@countAnimation]="cartCount">
+                        {{ cartCount }}
+                    </div>
+                }
             </div>
         </div>
     </div>

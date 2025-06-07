@@ -1,7 +1,7 @@
 @if (isExpanded) {
   <div class="backdrop" (click)="onClose()"></div>
 
-  <div class="expandable" [@NavigationMobileAnimation]>
+  <div class="expandable" [@cartAnimation]>
     <div>
       <div class="first-section">
         <div class="header">
@@ -16,49 +16,53 @@
 
         @if (cartForm) {
           <div class="cart-items">
-            @for (item of cartItems; track $index) {
-              <div class="cart-item">
-                <div class="product-info">
-                  <h3>{{ item.name }}</h3>
-                  <p class="description">{{ item.description }}</p>
-                  <p class="price">${{ item.price }}</p>
-                </div>
-                
-                <div class="item-actions">
-                  <div class="quantity-selector">
-                    <app-quantity-selector
-                      [options]="{
-                        formGroup: cartForm,
-                        formControlName: item.id,
-                        min: 1,
-                        max: 99
-                      }"
-                      (quantityChange)="onQuantityChanged(item.id, $event)">
-                    </app-quantity-selector>
+            @for (item of cartItems; track item.product.selectedSku?.skuID) {
+              @if (item.product.selectedSku) {
+                <div class="cart-item" [@cartItemAnimation]>
+                  <div class="product-image">
+                    <ipi-img [src]="item.product.image" [ariaLabel]="item.product.savedProduct?.title || item.product.productInfo.title"></ipi-img>
                   </div>
-                  <button class="remove-button" (click)="removeItem(item.id)">
-                    <ipi-img src="assets/icons/trash.svg" [ariaLabel]="'Remove item'"></ipi-img>
-                  </button>
+                  <div class="product-info">
+                    <h3>{{ item.product.savedProduct?.title || item.product.productInfo.title }}</h3>
+                    <p class="description">{{ item.product.selectedSku.nameTrans || item.product.selectedSku.name }}</p>
+                    <p class="price">{{ item.product.price.converted }}</p>
+                  </div>
+                  
+                  <div class="item-actions">
+                    <div class="quantity-selector">
+                      <app-quantity-selector
+                        [options]="{
+                          formGroup: cartForm,
+                          formControlName: item.product.selectedSku.skuID,
+                          min: 1,
+                          max: 10
+                        }"
+                        (quantityChange)="onQuantityChanged(item.product.selectedSku.skuID, $event)">
+                      </app-quantity-selector>
+                    </div>
+                    <button class="remove-button" (click)="removeItem(item.product.selectedSku.skuID)">
+                      <ipi-img src="assets/icons/trash.svg" [ariaLabel]="'Remove item'"></ipi-img>
+                    </button>
+                  </div>
                 </div>
-              </div>
+              }
             }
           </div>
         }
 
         @if (cartItems.length === 0) {
-          <div class="empty-cart">
+          <div class="empty-cart" [@cartItemAnimation]>
             <ipi-img src="assets/icons/cart.svg" [ariaLabel]="'Empty cart'"></ipi-img>
-
             <p>Вашата кошница е празна</p>
           </div>
         }
       </div>
 
       @if (cartItems.length > 0) {
-        <div class="cart-summary">
+        <div class="cart-summary" [@cartItemAnimation]>
           <div class="summary-row">
             <span>Междинна сума</span>
-            <span>${{ getSubtotal() }}</span>
+            <span>{{ totalAmount }} BGN</span>
           </div>
           <div class="summary-row">
             <span>Доставка</span>
@@ -66,15 +70,15 @@
           </div>
           <div class="summary-row total">
             <span>Общо</span>
-            <span>${{ getSubtotal() }}</span>
+            <span>{{ totalAmount }} BGN</span>
           </div>
         </div>
 
-        <div class="bottom-navigation">
+        <div class="bottom-navigation" [@cartItemAnimation]>
           <button class="continue-shopping" (click)="onClose()">
             Продължи пазаруването
           </button>
-          <button class="checkout-button">
+          <button class="checkout-button" (click)="onCheckout()">
             Плащане
           </button>
         </div>

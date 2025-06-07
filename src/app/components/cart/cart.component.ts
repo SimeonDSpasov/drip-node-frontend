@@ -1,87 +1,137 @@
-import { Component, OnInit, effect } from '@angular/core';
+import { Component, OnInit, effect, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 import { IpiImageComponent } from '@ipi-soft/ng-components/image';
 
 import { IpiButtonComponent } from './../custom/button';
 import { QuantitySelectorComponent } from './../custom/quantity-selector';
 
-import { CartService } from './../services/cart.service';
+import { CartService } from './../../services/cart.service';
 import { UserAgentService } from './../custom/services/src/user-agent.service';
 import { LoaderService, OSService, ScrollBlockService } from './../custom/services';
 
-import { NavigationMobileAnimation } from './../../animations/navigation-mobile.animation';
+import { CartAnimation, CartItemAnimation } from './../../animations/cart.animation';
+import { ProductSelection } from '../product-page/product-page.component';
+import { Cart, CartItem } from '../../models/cart.model';
 
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
-  animations: [NavigationMobileAnimation],
+  animations: [CartAnimation, CartItemAnimation],
   standalone: true,
   imports: [
+    CommonModule,
     IpiImageComponent,
     IpiButtonComponent,
     ReactiveFormsModule,
     QuantitySelectorComponent,
   ],
 })
-
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, OnDestroy {
+  cartForm!: FormGroup;
+  public isExpanded: boolean = false;
+  cartItems: CartItem[] = [];
+  totalAmount: number = 0;
 
   constructor(
     public cartService: CartService,
     private fb: FormBuilder,
     private userAgent: UserAgentService,
     private loaderService: LoaderService,
-    private scrollBlockService: ScrollBlockService) {
-      effect(() => {
-        const isOpen = this.cartService.isCartOpen();
-  
-        this.handleCartStateChange(isOpen);
-      });
-    }
-  
-  cartForm!: FormGroup;
+    private scrollBlockService: ScrollBlockService,
+    private router: Router
+  ) {
+    effect(() => {
+      const isOpen = this.cartService.isCartOpen();
+      this.handleCartStateChange(isOpen);
+    });
 
-  public cartItems = [
-    { id: 'product-1', name: 'iPhone 15', description: '256GB Gold', price: 1797 },
-    { id: 'product-2', name: 'iPad Air', description: '9.7 inch, 128GB', price: 799 },
-    { id: 'product-3', name: 'Playstation 5', description: 'Digital Edition', price: 599 },
-  ];
+    // Subscribe to cart changes
+    effect(() => {
+      const cart = this.cartService.cart();
+      if (cart) {
+        this.cartItems = cart;
+        this.updateForm();
+        this.calculateTotal();
+      } else {
+        this.cartItems = [];
+        this.totalAmount = 0;
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.updateForm();
+    this.loaderService.show();
+  }
+
+  ngOnDestroy(): void {
+    // No need to unsubscribe from effects
+  }
 
   onClose(): void {
     this.cartService.closeCart();
   }
 
-  ngOnInit(): void {
-    const group: { [key: string]: FormControl } = {};
+  onCheckout(): void {
+    this.cartService.closeCart();
+    this.router.navigate(['/checkout']);
+  }
 
+  private updateForm(): void {
+    const group: { [key: string]: FormControl } = {};
     this.cartItems.forEach(item => {
-      group[item.id] = new FormControl(1); // default quantity 1
+      if (item.product.selectedSku) {
+        group[item.product.selectedSku.skuID] = new FormControl(item.quantity);
+      }
+    });
+    this.cartForm = this.fb.group(group);
+  }
+
+  onQuantityChanged(productId: string | undefined, quantity: number): void {
+    if (!productId) return;
+    
+    const currentCart = this.cartService.cart();
+    if (!currentCart) return;
+
+    const updatedCart = currentCart.map((item: CartItem) => {
+      if (item.product.selectedSku?.skuID === productId) {
+        return { ...item, quantity };
+      }
+      return item;
     });
 
-    this.cartForm = this.fb.group(group);
-
-    this.loaderService.show();
+    this.cartService.cart.set(updatedCart);
   }
 
-  onQuantityChanged(productId: string, quantity: number) {
-    console.log(`Quantity changed for ${productId}:`, quantity);
+  removeItem(productId: string | undefined): void {
+    if (!productId) return;
+    
+    const currentCart = this.cartService.cart();
+    if (!currentCart) return;
+
+    const updatedCart = currentCart.filter(
+      (item: CartItem) => item.product.selectedSku?.skuID !== productId
+    );
+
+    this.cartService.cart.set(updatedCart);
   }
 
-  removeItem(productId: string): void {
-    this.cartItems = this.cartItems.filter(item => item.id !== productId);
-    this.cartForm.removeControl(productId);
+  clearCart(): void {
+    this.cartService.cart.set(null);
   }
 
-  getSubtotal(): number {
-    return this.cartItems.reduce((total, item) => {
-      const quantity = this.cartForm.get(item.id)?.value || 1;
-      return total + (item.price * quantity);
-    }, 0);
+  private calculateTotal(): void {
+    this.totalAmount = Number(this.cartItems.reduce((total, item) => {
+      const price = parseFloat(item.product.price.original);
+      const convertedPrice = this.cartService.getConvertedPrice(price);
+      return total + (convertedPrice * item.quantity);
+    }, 0).toFixed(2));
   }
-
-  public isExpanded: boolean = false;
 
   private handleCartStateChange(isOpen: boolean): void {
     if (!this.userAgent.getUserAgent()) {

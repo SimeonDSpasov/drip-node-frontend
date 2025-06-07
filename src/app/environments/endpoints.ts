@@ -17,6 +17,10 @@ export const endpoints = {
     getEndUsersAsAdmin: 'user/admin/get',
     getEndUsersChunkAsAdmin: 'user/admin/get/chunk/:from/:to/:sort/:sortDirection',
   },
+  order: {
+    createOrder: 'order/create',
+    calculateTotalPrice: 'order/price',
+  },
   product: {
     getProductsChunk: 'cnfans/products/chunk/:from/:to',
     getCNFansProductDetail: 'cnfans/products/:id/:platform',

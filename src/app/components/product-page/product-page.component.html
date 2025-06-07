@@ -145,6 +145,20 @@
                     </div>
                 </div>
             </div>
+
+            <div class="option-group" *ngIf="selectedSkuStock > 0">
+                <h3>Количество</h3>
+                <div class="quantity-selector">
+                    <app-quantity-selector
+                        [options]="{
+                            min: 1,
+                            max: selectedSkuStock > 10 ? 10 : selectedSkuStock,
+                            quantity: quantity
+                        }"
+                        (quantityChange)="onQuantityChanged($event)">
+                    </app-quantity-selector>
+                </div>
+            </div>
         </div>
 
         <button class="add-to-cart-button" 
@@ -155,8 +169,47 @@
     </div>
 </div>
 
-<div *ngIf="isLoading" class="loading">
-    Loading product...
+<div class="product-page loading" *ngIf="isLoading">
+    <div class="product-gallery">
+        <div class="main-image loading-image"></div>
+        <div class="thumbnail-images">
+            <div class="thumbnail loading-thumbnail"></div>
+            <div class="thumbnail loading-thumbnail"></div>
+            <div class="thumbnail loading-thumbnail"></div>
+        </div>
+    </div>
+
+    <div class="product-details">
+        <div class="loading-title"></div>
+        <div class="loading-price"></div>
+
+        <div class="product-options">
+            <div class="option-group">
+                <h3>Цвят</h3>
+                <div class="color-buttons">
+                    <div class="color-button loading-color-button"></div>
+                    <div class="color-button loading-color-button"></div>
+                    <div class="color-button loading-color-button"></div>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <h3>Размер</h3>
+                <div class="option-buttons">
+                    <div class="option-button loading-size-button"></div>
+                    <div class="option-button loading-size-button"></div>
+                    <div class="option-button loading-size-button"></div>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <h3>Количество</h3>
+                <div class="loading-quantity"></div>
+            </div>
+        </div>
+
+        <div class="loading-button"></div>
+    </div>
 </div>
 
 <div *ngIf="error" class="error">

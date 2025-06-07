@@ -30,5 +30,17 @@ export const routes: Routes = [
         title: 'Login',
         data: { pageName: 'Login' }
       },
+      {
+        path: 'cart',
+        loadComponent: () => import('./components/cart/cart.component').then(m => m.CartComponent),
+        title: 'Cart',
+        data: { pageName: 'Cart' }
+      },
+      {
+        path: 'checkout',
+        loadComponent: () => import('./components/checkout/checkout.component').then(m => m.CheckoutComponent),
+        title: 'Checkout',
+        data: { pageName: 'Checkout' }
+      },
   { path: '**', redirectTo: '' }
 ];

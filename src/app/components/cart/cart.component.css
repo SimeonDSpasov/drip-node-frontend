@@ -83,44 +83,58 @@
 
 .cart-item {
     display: flex;
-    justify-content: space-between;
     gap: 16px;
     padding: 16px;
-    background: #f9f9f9;
+    border-bottom: 1px solid #eee;
+}
+
+.product-image {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
     border-radius: 8px;
+    overflow: hidden;
+}
+
+.product-image ipi-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .product-info {
     flex: 1;
+    min-width: 0;
 }
 
 .product-info h3 {
-    margin: 0 0 4px 0;
+    margin: 0 0 8px;
     font-size: 16px;
     font-weight: 500;
 }
 
-.description {
-    color: #666;
+.product-info .description {
+    margin: 0 0 8px;
     font-size: 14px;
-    margin: 0 0 8px 0;
+    color: #666;
 }
 
-.price {
-    font-weight: 600;
+.product-info .price {
     margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #000;
 }
 
 .item-actions {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
     gap: 8px;
+    align-items: flex-end;
 }
 
-.remove-button ipi-img {
-    width: 24px;
-    height: 24px;
+.quantity-selector {
+    width: 120px;
 }
 
 .remove-button {
@@ -128,12 +142,17 @@
     border: none;
     padding: 4px;
     cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
+    opacity: 0.6;
+    transition: opacity 0.2s;
 }
 
 .remove-button:hover {
-    background-color: #ffebee;
+    opacity: 1;
+}
+
+.remove-button ipi-img {
+    width: 20px;
+    height: 20px;
 }
 
 .empty-cart {

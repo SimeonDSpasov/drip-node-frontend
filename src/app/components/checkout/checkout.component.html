@@ -1,0 +1,163 @@
+<div class="checkout-container">
+  <div class="checkout-content">
+    <div class="checkout-header">
+      <h1>Обобщение на поръчката</h1>
+
+      <p class="subtitle">Моля, попълнете вашите данни, за да завършите поръчката.</p>
+    </div>
+
+    <div class="checkout-grid">
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <h2>Детайли за поръчката</h2>
+        
+        @if (isLoading) {
+          <div class="loading-items">
+            @for (item of [1,2,3]; track item) {
+              <div class="loading-item">
+                <div class="loading-image"></div>
+                <div class="loading-details">
+                  <div class="loading-title"></div>
+                  <div class="loading-price"></div>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="cart-items">
+            @for (item of cartItems; track item.product.selectedSku?.skuID) {
+              <div class="cart-item">
+                <div class="product-image">
+                  <ipi-img [src]="item.product.image" [ariaLabel]="item.product.savedProduct?.title || item.product.productInfo.title"></ipi-img>
+                </div>
+                <div class="product-info">
+                  <h3>{{ item.product.savedProduct?.title || item.product.productInfo.title }}</h3>
+                  <p class="description">{{ item.product.selectedSku?.nameTrans || item.product.selectedSku?.name }}</p>
+                  <p class="price">{{ item.product.price.converted }}</p>
+                  <p class="quantity">Количество: {{ item.quantity }}</p>
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="order-total">
+            <div class="total-row">
+              <span>Междинна сума</span>
+              <span *ngIf="!isCalculatingPrice">{{ totalAmount }} BGN</span>
+              <span *ngIf="isCalculatingPrice" class="loading-text">Изчисляване на цена...</span>
+            </div>
+            <div class="total-row">
+              <span>Доставка</span>
+              <span *ngIf="!isCalculatingPrice">{{ shippingPrice }} BGN</span>
+              <span *ngIf="isCalculatingPrice" class="loading-text">Изчисляване на цена...</span>
+            </div>
+            <div class="total-row final">
+              <span>Общо</span>
+              <span *ngIf="!isCalculatingPrice">{{ totalAmount }} BGN</span>
+              <span *ngIf="isCalculatingPrice" class="loading-text">Изчисляване на цена...</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Checkout Form -->
+      <div class="checkout-form">
+        <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+          <div class="form-section">
+            <h3>Contact Information</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="firstName">Име</label>
+                <input type="text" id="firstName" formControlName="firstName" [class.error]="checkoutForm.get('firstName')?.invalid && checkoutForm.get('firstName')?.touched">
+                <span class="error-message" *ngIf="checkoutForm.get('firstName')?.invalid && checkoutForm.get('firstName')?.touched">
+                  {{ getErrorMessage('firstName') }}
+                </span>
+              </div>
+
+              <div class="form-group">
+                <label for="lastName">Фамилия</label>
+                <input type="text" id="lastName" formControlName="lastName" [class.error]="checkoutForm.get('lastName')?.invalid && checkoutForm.get('lastName')?.touched">
+                <span class="error-message" *ngIf="checkoutForm.get('lastName')?.invalid && checkoutForm.get('lastName')?.touched">
+                  {{ getErrorMessage('lastName') }}
+                </span>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Имейл</label>
+                <input type="email" id="email" formControlName="email" [class.error]="checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched">
+                <span class="error-message" *ngIf="checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched">
+                  {{ getErrorMessage('email') }}
+                </span>
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Телефон</label>
+                <input type="tel" id="phone" formControlName="phone" [class.error]="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched">
+                <span class="error-message" *ngIf="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched">
+                  {{ getErrorMessage('phone') }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Адрес за доставка</h3>
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label for="address">Адрес</label>
+                <input 
+                  type="text" 
+                  id="address" 
+                  name="address" 
+                  formControlName="address" 
+                  placeholder="Вашият адрес ще бъде използван за доставка">
+              </div>
+
+              <div class="form-group full-width">
+                <label for="street">Улица</label>
+                <input 
+                  type="text" 
+                  id="street" 
+                  name="street" 
+                  formControlName="street" 
+                  placeholder="Въведете улицата">
+              </div>
+
+              <div class="form-group">
+                <label for="city">Град</label>
+                <input 
+                  type="text" 
+                  id="city" 
+                  name="city" 
+                  formControlName="city" 
+                  placeholder="Въведете града">
+              </div>
+
+              <div class="form-group">
+                <label for="postalCode">Пощенски код</label>
+                <input type="text" id="postalCode" formControlName="postalCode" [class.error]="checkoutForm.get('postalCode')?.invalid && checkoutForm.get('postalCode')?.touched">
+                <span class="error-message" *ngIf="checkoutForm.get('postalCode')?.invalid && checkoutForm.get('postalCode')?.touched">
+                  {{ getErrorMessage('postalCode') }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Допълнителна Информация</h3>
+            <div class="form-group full-width">
+              <label for="notes">Бележки (Незадължително)</label>
+              <textarea id="notes" formControlName="notes" rows="4"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" [disabled]="checkoutForm.invalid" class="submit-button">
+              Продължи към плащане
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> 

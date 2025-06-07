@@ -5,22 +5,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { Subscription } from 'rxjs';
 
-import { ProductInfo, Product, SKU } from './../../models/product.model';
-import { RequestsProductService } from './../../services/requests/requests-product.service';
-import { RateService } from './../../services/rate.service';
+import { QuantitySelectorComponent } from './../custom/quantity-selector';
 import { IpiImageComponent } from './../custom/image/src/ipi-img.component';
 import { ProductGridComponent } from './../product-grid/product-grid.component';
+
+import { CartService } from './../../services/cart.service';
+import { RateService } from './../../services/rate.service';
+import { RequestsOrderService } from './../../services/requests/requests.order.service';
+import { RequestsProductService } from './../../services/requests/requests-product.service';
+
+import { ProductInfo, Product, SKU } from './../../models/product.model';
 
 interface FinishedProduct {
   productInfo: ProductInfo;
   savedProduct: Product | null;
-}
-
-interface CNFansResponse {
-  status: number;
-  data: {
-    data: FinishedProduct;
-  };
 }
 
 interface ColorGroup {
@@ -32,10 +30,10 @@ interface ColorGroup {
     stock: number;
   }[];
   isSingleSku: boolean;
-  singleSkuPrice?: string;  // Add optional price for single SKU cases
+  singleSkuPrice?: string;
 }
 
-interface ProductSelection {
+export interface ProductSelection {
   productInfo: ProductInfo;
   savedProduct: Product | null;
   selectedSku: SKU | null;
@@ -53,9 +51,32 @@ interface ProductSelection {
   templateUrl: './product-page.component.html',
   styleUrls: ['./product-page.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IpiImageComponent, ProductGridComponent]
+  imports: [
+    CommonModule,
+    FormsModule,
+    IpiImageComponent,
+    ProductGridComponent,
+    QuantitySelectorComponent,
+  ],
 })
 export class ProductPageComponent implements OnInit, OnDestroy {
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private requestsProductService: RequestsProductService,
+    private requestsOrderService: RequestsOrderService,
+    private rateService: RateService,
+    private cartService: CartService,
+  ) {
+    this.subscription = this.rateService.getRateObservable().subscribe(rate => {
+      this.currentRate = rate;
+      if (this.productInfo) {
+        this.updateSelectedSku();
+      }
+    });
+  }
+
   productInfo: ProductInfo | null = null;
   savedProduct: Product | null = null;
   selectedImage: string = '';
@@ -64,6 +85,7 @@ export class ProductPageComponent implements OnInit, OnDestroy {
   selectedType: string = '';
   isLoading: boolean = true;
   error: string | null = null;
+  quantity: number = 1;
 
   // Available options
   availableColors: string[] = [];
@@ -80,20 +102,6 @@ export class ProductPageComponent implements OnInit, OnDestroy {
   selection: ProductSelection | null = null;
 
   private subscription: Subscription;
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private requestsProductService: RequestsProductService,
-    private rateService: RateService
-  ) {
-    this.subscription = this.rateService.getRateObservable().subscribe(rate => {
-      this.currentRate = rate;
-      if (this.productInfo) {
-        this.updateSelectedSku();
-      }
-    });
-  }
 
   ngOnInit(): void {
     this.loadProduct();
@@ -128,8 +136,7 @@ export class ProductPageComponent implements OnInit, OnDestroy {
 
         this.productInfo = productInfo;
         this.savedProduct = savedProduct;
-        
-        console.log(this.savedProduct)
+
         if (this.productInfo.imgList?.length > 0) {
           this.selectedImage = this.productInfo.imgList[0];
         }
@@ -185,7 +192,6 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     });
 
     this.colorGroups = Array.from(colorGroupsMap.values());
-    console.log('Color groups:', this.colorGroups);
   }
 
   private extractColorName(nameTrans: string): string | null {
@@ -238,23 +244,19 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     if (!this.productInfo?.skus) return;
 
     // Find the matching SKU based on selected options
-    const matchingSku = this.productInfo.skus.find(sku => {
-      const props = this.productInfo?.skuPropNamesMap;
-      const values = this.productInfo?.skuPropValsMap;
-      
-      if (!props || !values) return false;
+    const selectedGroup = this.colorGroups.find(group => group.color === this.selectedColor);
+    if (!selectedGroup) return;
 
-      const skuProps = sku.propsID.split(';').map(id => values[id]);
-      const colorMatch = skuProps.includes(this.selectedColor);
-      
-      // For single SKU cases, don't check size
-      const selectedGroup = this.colorGroups.find(group => group.color === this.selectedColor);
-      if (selectedGroup?.isSingleSku) {
-        return colorMatch;
-      }
-      
-      return colorMatch && skuProps.includes(this.selectedSize);
-    });
+    let matchingSku: SKU | undefined;
+
+    if (selectedGroup.isSingleSku) {
+      // For single SKU cases, use the first SKU from the group
+      matchingSku = selectedGroup.sizes[0]?.sku;
+    } else {
+      // For regular cases, find the SKU that matches both color and size
+      const sizeInfo = selectedGroup.sizes.find(size => size.size === this.selectedSize);
+      matchingSku = sizeInfo?.sku;
+    }
 
     if (matchingSku) {
       const price = parseFloat(matchingSku.price);
@@ -281,8 +283,11 @@ export class ProductPageComponent implements OnInit, OnDestroy {
         },
         image: matchingSku.imgUrl
       };
-
-      console.log('Current selection:', this.selection);
+    } else {
+      // Reset selection if no matching SKU found
+      this.selectedSkuPrice = '';
+      this.selectedSkuStock = 0;
+      this.selection = null;
     }
   }
 
@@ -309,25 +314,19 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     this.updateSelectedSku();
   }
 
+  onQuantityChanged(quantity: number): void {
+    if (quantity >= 1 && quantity <= 10) {
+      this.quantity = quantity;
+    }
+  }
+
   addToCart(): void {
-    if (!this.selection || !this.selection.selectedSku) {
-      alert('Please select all options before adding to cart');
+    if (!this.productInfo || !this.selection?.selectedSku) {
       return;
     }
 
-    // Check if size is required for this color
-    const selectedGroup = this.colorGroups.find(group => group.color === this.selectedColor);
-    if (!selectedGroup?.isSingleSku && !this.selectedSize) {
-      alert('Please select a size before adding to cart');
-      return;
-    }
-
-    if (this.selection.selectedSku.stock <= 0) {
-      alert('This item is out of stock');
-      return;
-    }
-
-    console.log('Adding to cart:', this.selection);
+    // TODO: Add to cart service
+    this.cartService.addToCart(this.selection);
   }
 
   onProductClick(product: Product) {

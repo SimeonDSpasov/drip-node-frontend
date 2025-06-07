@@ -1,11 +1,9 @@
 import { Product } from './product.model';
-
-export interface Cart {
-    items: CartItem[];
-    totalAmount: number;
-}
+import { ProductSelection } from '../components/product-page/product-page.component';
 
 export interface CartItem {
-    product: Product;
+    product: ProductSelection;
     quantity: number;
 }
+
+export type Cart = CartItem[];
