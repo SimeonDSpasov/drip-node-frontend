@@ -3,6 +3,8 @@ import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 
 import { UserRole } from './models/user.model';
+import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
+import { PaymentCancelComponent } from './components/payment-cancel/payment-cancel.component';
 
 export const routes: Routes = [
     {
@@ -41,6 +43,18 @@ export const routes: Routes = [
         loadComponent: () => import('./components/checkout/checkout.component').then(m => m.CheckoutComponent),
         title: 'Checkout',
         data: { pageName: 'Checkout' }
+      },
+      {
+        path: 'payment/success',
+        loadComponent: () => import('./components/payment-success/payment-success.component').then(m => m.PaymentSuccessComponent),
+        title: 'Payment Success',
+        data: { pageName: 'Payment Success' },
+      },
+      {
+        path: 'payment/cancel',
+        loadComponent: () => import('./components/payment-cancel/payment-cancel.component').then(m => m.PaymentCancelComponent),
+        title: 'Payment Cancel',
+        data: { pageName: 'Payment Cancel' },
       },
   { path: '**', redirectTo: '' }
 ];

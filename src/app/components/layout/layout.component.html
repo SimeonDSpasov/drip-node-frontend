@@ -2,7 +2,7 @@
     <div class="wrapper">
         <app-navigation></app-navigation>
 
-        <div class="content">
+        <div class="content" [class.payment-route]="isPaymentRoute">
             <router-outlet></router-outlet>
 
             <app-cart></app-cart>

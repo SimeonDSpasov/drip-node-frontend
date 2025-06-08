@@ -110,3 +110,12 @@
         gap: 1rem;
     }
 }
+
+.layout-content {
+    margin-top: 120px;
+}
+
+/* Add margin to all routes except payment success and cancel */
+.layout-content:not(.payment-route) {
+    margin-top: 120px;
+}

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 import { CartComponent } from './../cart/cart.component';
 import { FooterComponent } from './footer/footer.component';
@@ -23,11 +24,18 @@ import { UserService } from './../../services/user.service';
 })
 
 export class LayoutComponent {
+  isPaymentRoute: boolean = false;
 
   constructor(
     private userService: UserService,
+    private router: Router
   ) {
     this.init();
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.isPaymentRoute = event.url.includes('/payment/');
+    });
   }
 
   private async init(): Promise<void> {
