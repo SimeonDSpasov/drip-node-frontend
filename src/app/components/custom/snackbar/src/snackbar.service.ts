@@ -19,8 +19,8 @@ export class IpiSnackbarService {
 
   private defaultSnackbarOptions: IpiSnackbarOptions = {
     error: false,
-    animationDuration: 10,
-    backgroundColor: '#14BD6C',
+    animationDuration: 3,
+    backgroundColor: '#000000',
     placeholderTextColor: '#FFFFFF',
     messageTextColor: '#FFFFFF',
     progressColor: '#FFFFFF',

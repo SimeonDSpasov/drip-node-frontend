@@ -24,7 +24,18 @@ export const routes: Routes = [
         canActivate: [ authGuard(UserRole.Admin) ],
         title: 'Admin Panel',
         data: { pageName: 'Admin Panel' },
-        loadComponent: () => import('./components/admin/product-fetcher/product-fetcher.component').then(m => m.ProductFetcherComponent)
+        loadComponent: () => import('./components/admin/admin-panel/admin-panel.component').then(m => m.AdminPanelComponent),
+        children: [
+          {
+            path: 'orders',
+            loadComponent: () => import('./components/admin/orders-list/orders-list.component').then(m => m.OrdersListComponent)
+          },
+          {
+            path: 'products',
+            loadComponent: () => import('./components/admin/product-fetcher/product-fetcher.component').then(m => m.ProductFetcherComponent)
+          },
+          { path: '', redirectTo: 'orders', pathMatch: 'full' }
+        ]
       },
       {
         path: 'login',
@@ -55,6 +66,12 @@ export const routes: Routes = [
         loadComponent: () => import('./components/payment-cancel/payment-cancel.component').then(m => m.PaymentCancelComponent),
         title: 'Payment Cancel',
         data: { pageName: 'Payment Cancel' },
+      },
+      {
+        path: 'about-us',
+        loadComponent: () => import('./components/about/about.component').then(m => m.AboutComponent),
+        title: 'За нас',
+        data: { pageName: 'За нас' },
       },
   { path: '**', redirectTo: '' }
 ];

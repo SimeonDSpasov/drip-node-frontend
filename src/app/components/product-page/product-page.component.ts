@@ -250,27 +250,21 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     let matchingSku: SKU | undefined;
 
     if (selectedGroup.isSingleSku) {
-      // For single SKU cases, use the first SKU from the group
-      matchingSku = selectedGroup.sizes[0]?.sku;
+      // For products with only colors (no sizes)
+      matchingSku = this.productInfo.skus.find(sku => 
+        sku.imgUrl === selectedGroup.colorImage
+      );
     } else {
-      // For regular cases, find the SKU that matches both color and size
+      // For products with both colors and sizes
       const sizeInfo = selectedGroup.sizes.find(size => size.size === this.selectedSize);
       matchingSku = sizeInfo?.sku;
     }
 
     if (matchingSku) {
-      const price = parseFloat(matchingSku.price);
-      if (this.currentRate) {
-        this.selectedSkuPrice = (price * this.currentRate).toFixed(2) + ' BGN';
-      } else {
-        this.selectedSkuPrice = price.toFixed(2) + ' CNY';
-      }
       this.selectedSkuStock = matchingSku.stock;
-      if (matchingSku.imgUrl) {
-        this.selectedImage = matchingSku.imgUrl;
-      }
-
-      // Update the complete selection
+      this.selectedSkuPrice = this.getFormattedPrice(matchingSku.price);
+      
+      // Update the selection
       this.selection = {
         productInfo: this.productInfo,
         savedProduct: this.savedProduct,
@@ -279,15 +273,10 @@ export class ProductPageComponent implements OnInit, OnDestroy {
         selectedSize: this.selectedSize,
         price: {
           original: matchingSku.price,
-          converted: this.selectedSkuPrice
+          converted: this.getFormattedPrice(matchingSku.price)
         },
-        image: matchingSku.imgUrl
+        image: this.selectedImage
       };
-    } else {
-      // Reset selection if no matching SKU found
-      this.selectedSkuPrice = '';
-      this.selectedSkuStock = 0;
-      this.selection = null;
     }
   }
 
@@ -325,8 +314,7 @@ export class ProductPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // TODO: Add to cart service
-    this.cartService.addToCart(this.selection);
+    this.cartService.addToCart(this.selection, this.quantity);
   }
 
   onProductClick(product: Product) {

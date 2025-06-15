@@ -1,0 +1,88 @@
+<div class="orders-list">
+  <h2>Orders</h2>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Expanded order details section -->
+  <div *ngIf="expandedOrderId" class="expanded-order-details">
+    <div class="order-details-header">
+      <span class="order-id">Order ID: {{ expandedOrderId }}</span>
+      <span class="order-status-badge" [ngClass]="'status-' + getExpandedOrderStatus()">{{ getExpandedOrderStatus() | titlecase }}</span>
+      <span class="order-total-bgn-header">Total: {{ expandedOrderTotalBGN | number:'1.2-2' }} лв.</span>
+    </div>
+    <div *ngIf="expandedOrderLoading" class="loading-spinner">
+      <div class="spinner"></div>
+      Loading order details...
+    </div>
+    <table class="products-table" *ngIf="!expandedOrderLoading && expandedOrderProducts.length">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Title</th>
+          <th>SKU</th>
+          <th>Color</th>
+          <th>Size</th>
+          <th>Price</th>
+          <th>Price (BGN)</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th>Subtotal (BGN)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of expandedOrderProducts">
+          <td><img [src]="p.image" alt="{{ p.title }}" class="product-thumb"></td>
+          <td>{{ p.title }}</td>
+          <td>{{ p.skuName }}</td>
+          <td>{{ p.color }}</td>
+          <td>{{ p.size }}</td>
+          <td>{{ formatCurrency(p.price) }}</td>
+          <td>{{ getBGN(p.price) | number:'1.2-2' }} лв.</td>
+          <td>{{ p.quantity }}</td>
+          <td>{{ formatCurrency(p.price * p.quantity) }}</td>
+          <td>{{ getBGN(p.price * p.quantity) | number:'1.2-2' }} лв.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="orders-table-wrapper" *ngIf="orders.length">
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Status</th>
+          <th>Total</th>
+          <th>Created</th>
+          <th></th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let order of orders">
+          <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.customer.firstName }} {{ order.customer.lastName }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ formatCurrency(order.totalPrice) }}</td>
+            <td>{{ order.createdAt | date:'short' }}</td>
+            <td>
+              <button (click)="toggleDetails(order)">{{ expandedOrderId === (order.id || order._id) ? 'Hide' : 'View' }}</button>
+            </td>
+            <td>
+              <button (click)="updateStatus(order, OrderListStatus.Finished)" [disabled]="order.status === OrderListStatus.Finished">Mark Completed</button>
+              <button (click)="deleteOrder(order)">Delete</button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!orders.length && !error">
+    No orders found.
+  </div>
+</div> 

@@ -3,6 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { Cart } from './../models/cart.model';
 import { ProductSelection } from './../components/product-page/product-page.component';
 import { RateService } from './rate.service';
+import { IpiSnackbarService } from './../components/custom/snackbar';
 
 interface CartItem {
   product: ProductSelection;
@@ -16,7 +17,10 @@ interface CartItem {
 export class CartService {
   private isOpen = signal<boolean>(false);
 
-  constructor(private rateService: RateService) { }
+  constructor(
+    private rateService: RateService,
+    private snackbarService: IpiSnackbarService
+  ) { }
 
   public cart = signal<CartItem[] | null>(null);
 
@@ -32,15 +36,16 @@ export class CartService {
     this.isOpen.set(false);
   }
 
-  addToCart(product: ProductSelection): void {
+  addToCart(product: ProductSelection, quantity: number = 1): void {
     const currentCart = this.cart();
 
     if (!currentCart || currentCart.length === 0) {
       // Initialize cart if empty
       this.cart.set([{
         product,
-        quantity: 1
+        quantity
       }]);
+      this.snackbarService.open(`Added ${quantity} ${quantity === 1 ? 'item' : 'items'} to cart`);
     } else {
       // Check if product with same SKU already exists
       const existingItemIndex = currentCart.findIndex(
@@ -50,17 +55,18 @@ export class CartService {
       if (existingItemIndex > -1) {
         // Update quantity if product exists
         const updatedCart = [...currentCart];
-        updatedCart[existingItemIndex].quantity += 1;
+        updatedCart[existingItemIndex].quantity += quantity;
         this.cart.set(updatedCart);
+        this.snackbarService.open(`Updated quantity to ${updatedCart[existingItemIndex].quantity} items`);
       } else {
         // Add new product if not found
         this.cart.set([...currentCart, {
           product,
-          quantity: 1
+          quantity
         }]);
+        this.snackbarService.open(`Added ${quantity} ${quantity === 1 ? 'item' : 'items'} to cart`);
       }
     }
-
   }
 
   getConvertedPrice(price: number): number {

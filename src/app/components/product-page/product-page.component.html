@@ -101,7 +101,7 @@
 
         <div class="product-options">
             <div class="option-group">
-                <h3>Цвят</h3>
+                <h3>Модел</h3>
                 <div class="selected-color-name" *ngIf="selectedColor">
                     {{ selectedColor }}
                     <div class="selected-color-price" *ngIf="getSelectedColorGroup()?.isSingleSku">
@@ -139,7 +139,7 @@
                     </button>
                 </div>
                 <div class="single-sku-info" *ngIf="isSingleSkuForSelectedColor()">
-                    <div class="single-sku-message">Размер не е наличен за този цвят</div>
+                    <div class="single-sku-message">Размер не е наличен за този Модел</div>
                     <div class="single-sku-price" *ngIf="getSingleSkuPrice()">
                         {{ getSingleSkuPrice() }}
                     </div>
@@ -185,7 +185,7 @@
 
         <div class="product-options">
             <div class="option-group">
-                <h3>Цвят</h3>
+                <h3>Модел</h3>
                 <div class="color-buttons">
                     <div class="color-button loading-color-button"></div>
                     <div class="color-button loading-color-button"></div>

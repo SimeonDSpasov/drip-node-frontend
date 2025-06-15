@@ -20,12 +20,16 @@ export const endpoints = {
   order: {
     createOrder: 'order/create',
     calculateTotalPrice: 'order/price',
+    getOrders: 'order/admin',
+    updateOrder: 'order/admin/:id',
+    deleteOrder: 'order/admin/:id',
   },
   product: {
     getProductsChunk: 'cnfans/products/chunk/:from/:to',
     getCNFansProductDetail: 'cnfans/products/:id/:platform',
     getFinishedProduct: 'cnfans/products/:id/:platform/r',
     saveCNFansProduct: 'cnfans/products/:id/:platform/save',
+    getSavedProduct: 'cnfans/products/saved/:id',
   },
   exchangeRate: {
     getRate: 'exchange-rate/rate',
